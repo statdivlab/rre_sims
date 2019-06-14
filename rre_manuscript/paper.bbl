@@ -98,13 +98,6 @@
 \newblock {\em Journal of the American Statistical
   Association\/}~\textbf{72}(359), 669--672.
 
-\bibitem[Sekirov \emph{and others}(2010)Sekirov, Russell, Antunes and
-  Finlay]{sekirov2010gut}
-\textsc{Sekirov, Inna, Russell, Shannon~L, Antunes, L Caetano~M and Finlay,
-  B~Brett}. (2010).
-\newblock Gut microbiota in health and disease.
-\newblock {\em Physiological reviews\/}~\textbf{90}(3), 859--904.
-
 \bibitem[Tromas \emph{and others}(2017)Tromas, Fortin, Bedrani, Terrat,
   Cardoso, Bird, Greer and Shapiro]{tromas_2017}
 \textsc{Tromas, Nicolas, Fortin, Nathalie, Bedrani, Larbi, Terrat, Yves,
@@ -127,5 +120,10 @@
   richness estimation.
 \newblock {\em Journal of the American Statistical
   Association\/}~\textbf{100}(471), 942--959.
+
+\bibitem[Willis and Bunge(2015)Willis and Bunge]{willis_2015}
+\textsc{Willis, Amy and Bunge, John}. (2015).
+\newblock Estimating diversity via frequency ratios.
+\newblock {\em Biometrics\/}~\textbf{71}(4), 1042--1049.
 
 \end{thebibliography}

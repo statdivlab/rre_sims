@@ -29,7 +29,12 @@
 \newrgbcolor{alexcolor}{.1 .7 .7}
 \ifthenelse {\boolean{DEBUG}}
 {\newcommand{\alex}[1]{{\bf \alexcolor{[\@alex: #1]}}}}
-{\newcommand{\brian}[1]{}}
+{\newcommand{\alex}[1]{}}
+
+\newrgbcolor{editcolor}{.1 .5 .7}
+\ifthenelse {\boolean{DEBUG}}
+{\newcommand{\edit}[1]{{\bf \editcolor{[\@edit: #1]}}}}
+{\newcommand{\edit}[1]{}}
 
 \begin{document}
 
@@ -63,7 +68,7 @@ Health Sciences Building, Box 357232,
 \footnotetext{adwillis@uw.edu}
 
 \begin{abstract}
-{Our goal is estimating the true number of classes in a population.   We focus on the scenario where multiple frequency count tables have been collected from the same population.  In this setting we demonstrate the efficacy of a previously published penalized maximum likelihood method.  Four novel methods to tune the requisite penalization parameter are proposed.  The performance of all proposed tuning methods is compared in simulations.}
+{Our goal is estimating the true number of classes in a population.   We focus on the scenario where multiple frequency count tables have been collected from the same population.  In this setting we demonstrate the \edit{efficacy of a previously published penalized maximum likelihood method}.  Four novel methods to tune the requisite penalization parameter are proposed.  The performance of all proposed tuning methods is compared in simulations.}
 \end{abstract}
 
 \amy{Happy to discuss, but I think it's probably easiest for me to be corresponding author, because you won't have your UW e-mail forever}
@@ -71,18 +76,27 @@ Health Sciences Building, Box 357232,
 \section{Introduction}
 \label{sec:introduction}
 
-In the \textit{species problem} the goal is estimating the number of classes $C$ which truly exist in a population.  Typically exhaustive sampling is not possible, so our estimation is based on a sample of $c < C$ classes.  The problem is named for its origins in biological ecosystems, where $C$ is \textit{species richness}, the number of species.  However, methods developed for the species problem can be readily applied to applications far removed from biology.  For example, \citet{efron_1976} estimated the number of words $C$ Shakespeare truly knew by considering the words he used in his works to be a sample of $c$ classes.  \citet{fegatelli_2018} estimated the number of cars $C$ covered by an insurer based on accident data where $c$ cars had at least one accident.
+The \textit{species problem} concerns estimating the number of classes $C$ that are present in a population.
+$n$ individuals from the population can be sampled to find which classes they belong to, but since the  number of individuals in the sample is less than the total population size (which may be infinite), only $c \leq C$ classes are observed. The problem is named for its origins in biological ecosystems, where $C$ is \textit{species richness}, or the total number of species.  However, methods developed for the species problem can be applied to applications far removed from biology.  For example, \citet{efron_1976} estimated the number of words Shakespeare truly knew by modeling the frequencies of words in his published work, and  \citet{fegatelli_2018} estimated the number of cars covered by an insurer based on accident data where $c$ cars had at least one accident.
 
-In ecology, species richness is worthy of estimation because it is one quantifiable aspect of ecosystem diversity.  We focus our attention on microbial ecology where high species richness is associated with ecosystem stability, including in the human microbiome (see \citet{sekirov2010gut}). Microbial data often contain many species observed only a few times (\textit{rare species}) and some which are observed a large number of times (\textit{abundant species}).  In data with both rare and abundant species, richness estimation methods tend to have high variance.
+In ecology, species richness is a quantitative measurement of ecosystem diversity.  We focus on the specific application of estimating microbial diversity, that is, the number of strains of bacteria present in a population (e.g., a lake microenvironment or in an individual's oral cavity).
+Microbial diversity is often linked with ecosystem health, such as in the vaginal microbiome (where high diversity is associated with infection \cite{placeholder}) and in the gut microbiome (where high diversity is associated with healthy metabolism \cite{placeholder}).
+Microbial abundance data typically contain many species observed infrequently (\textit{rare species}) and some which are observed a large number of times (\textit{abundant species}).  In data with both many rare and many abundant species, richness estimation methods often have high variance \citep{willis_2015,bunge_2014} \amy{confirm most appropriate reference}, motivating a regularised estimation approach.
 
-Let $f_k$ be the number of classes observed $k$ times, called the \textit{frequencies} or \textit{frequency counts}.  Then the set $\{f_k\}_{k \geq 1}$ is a \textit{frequency count table}, a common way to represent collected data.  Using this notation, the species problem can then be rephrased as predicting $f_0$ (always unobserved) because $C = f_0 + f_1 + f_2 + \dots$ and $c = C - f_0$.  In this paper we focus on the analysis of multiple frequency count tables.  By demonstrating that the penalization proposal due to \citet{wang_2005} is effective in analyzing data with replicates, we extend their results.  Further, we show that replicate data is useful in tuning the required penalization parameter.
+In this paper we consider the penalised maximum likelihood approach of \citet{wang_2005} and investigate the open problem of selecting the penalization parameter. Because the true species richness $C$ is never observed for any sample, standard approaches for tuning parameter selection such as cross validation cannot be readily applied to the species problem. We propose analyzing biological replicates for tuning, thereby extending the proposal of \citet{wang_2005} to the analysis of independent but homogeneous ecosystems.
+We find that replicate data is advantageous for tuning the required penalization parameter and provide a comparison of the performance of 4 proposed methods for tuning parameter selection.
 
-This paper will be organized into the following sections:  We will review the literature most pertinent to our investigations in Section \ref{sec:literature_review}.  In Section \ref{sec:fixed_lambda} we specify the  extension to replicate data (more than one frequency count table).  In Section \ref{sec:efficacy_sims} the utility of penalization in replicate analysis is established using simulations.  In Section \ref{sec:tuning_proposals} we propose several novel methods for tuning the penalization parameter.  In Section \ref{sec:tuning_simulations} we will evaluate our tuning proposals using simulations.  Section \ref{sec:discussion} closes with an expanded discussion of our results and suggested directions for future work.
+This paper is organized as follows: We review species richness estimation in Section \ref{sec:literature_review}.  In Section \ref{sec:fixed_lambda} we describe our extension to biological replicates.  In Section \ref{sec:efficacy_sims} we establish the utility of penalization via simulations. In Section \ref{sec:tuning_proposals} we propose several novel methods for tuning the penalization parameter, and in Section \ref{sec:tuning_simulations}
+we evaluate our proposals.  Section \ref{sec:discussion} closes with an expanded discussion of our results and suggested directions for future work. Software implementing the methods is available in the \url{R} package \url{rre}, available at \url{github.com/statdivlab/rre}, and code to reproduce the simulation results is available at \url{github.com/statdivlab/rre_sims}.
+
 
 \section{Literature Review}
+
 \label{sec:literature_review}
 
-Poisson mixture models were used in the earliest examinations of species abundance.  In a Poisson model the number of times we observe an arbitrary species $i$ is $X_i \sim \text{Poisson}(\Lambda)$ where $\Lambda$ is a random variable distributed according to some mixing distribution.  The literature is filled with proposals for mixing distributions including the log normal in \citet{bulmer_1974}, inverse Gaussian in \citet{ord_1986} and a nonparametric distribution composed of point masses proposed by \citet{norris_1998}.  In this paper we focus on the simple, easily interpretable gamma distribution, proposed to study species abundance by \citet{fisher_1943}.
+The classical model for estimating species abundance is a Poisson mixture model.  Under this model the number of times we observe an species $i$ is $X_i \sim \text{Poisson}(\Lambda)$ where $\Lambda$ is a random variable distributed according to some mixing distribution.
+Many mixing distributions have been proposed (see, e.g., \cite{bulmer_1974,ord_1986,norris_1998}, and \cite{bunge_1993} for a comprehensive review). While our proposal may be easily generalized to other mixing distributions, in this paper we consider the simple, interpretable gamma distribution, which was first proposed to model species abundances by \citet{fisher_1943}.
+Let $f_k = \#\{i: X_i = k\}$ be the number of classes observed $k$ times, called the \textit{frequencies} or \textit{frequency counts}.  Then the set $\{f_k\}_{k \geq 1}$ is a \textit{frequency count table}, a common way to represent species abundance data. The species problem is to predicte $f_0$, because $C = f_0 + f_1 + f_2 + \dots = f_0 + c$.
 
 Let $\Lambda \sim \text{Gamma}(\alpha, \delta)$ with distribution function $f(\lambda) = \delta^\alpha \Gamma (\alpha)^{-1} \lambda^{\alpha - 1} e^{-\delta \lambda}$.  We use $\eta$ to reference the abundance parameters, so $\eta = (\alpha, \delta)$ in the gamma-Poisson model.  \citet{greenwood_1920} showed that the distribution of $X_i$ under a gamma-Poisson model can written as a negative-binomial distribution,
 \[ p_{\eta}(x) = \frac{\Gamma (x + \alpha)}{\Gamma (\alpha) x!} \left(\frac{\delta}{1+\delta} \right)^\alpha \left( \frac{1}{1+ \delta} \right)^x \]
