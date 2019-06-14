@@ -93,10 +93,10 @@ we evaluate our proposals.  Section \ref{sec:discussion} closes with an expanded
 \section{Literature Review}
 
 \label{sec:literature_review}
-
+\amy{up to here with editing}
 The classical model for estimating species abundance is a Poisson mixture model.  Under this model the number of times we observe an species $i$ is $X_i \sim \text{Poisson}(\Lambda)$ where $\Lambda$ is a random variable distributed according to some mixing distribution.
 Many mixing distributions have been proposed (see, e.g., \cite{bulmer_1974,ord_1986,norris_1998}, and \cite{bunge_1993} for a comprehensive review). While our proposal may be easily generalized to other mixing distributions, in this paper we consider the simple, interpretable gamma distribution, which was first proposed to model species abundances by \citet{fisher_1943}.
-Let $f_k = \#\{i: X_i = k\}$ be the number of classes observed $k$ times, called the \textit{frequencies} or \textit{frequency counts}.  Then the set $\{f_k\}_{k \geq 1}$ is a \textit{frequency count table}, a common way to represent species abundance data. The species problem is to predicte $f_0$, because $C = f_0 + f_1 + f_2 + \dots = f_0 + c$.
+Let $f_k = \#\{i: X_i = k\}$ be the number of classes observed $k$ times, called the \textit{frequencies} or \textit{frequency counts}.  Then the set $\{f_k\}_{k \geq 1}$ is a \textit{frequency count table}, a common way to represent species abundance data. The species problem is predicting $f_0$, because $C = f_0 + f_1 + f_2 + \dots = f_0 + c$.
 
 Let $\Lambda \sim \text{Gamma}(\alpha, \delta)$ with distribution function $f(\lambda) = \delta^\alpha \Gamma (\alpha)^{-1} \lambda^{\alpha - 1} e^{-\delta \lambda}$.  We use $\eta$ to reference the abundance parameters, so $\eta = (\alpha, \delta)$ in the gamma-Poisson model.  \citet{greenwood_1920} showed that the distribution of $X_i$ under a gamma-Poisson model can written as a negative-binomial distribution,
 \[ p_{\eta}(x) = \frac{\Gamma (x + \alpha)}{\Gamma (\alpha) x!} \left(\frac{\delta}{1+\delta} \right)^\alpha \left( \frac{1}{1+ \delta} \right)^x \]
