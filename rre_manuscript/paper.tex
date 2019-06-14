@@ -1,11 +1,5 @@
 \documentclass[oupdraft]{bio}
-% \usepackage[colorlinks=true, urlcolor=citecolor, linkcolor=citecolor, citecolor=citecolor]{hyperref}
 \usepackage{url}
-
-% Add history information for the article if required
-% \history{Received August 1, 2010;
-% revised October 1, 2010;
-% accepted for publication November 1, 2010}
 
 \usepackage{amsmath}
 \usepackage{xparse}
@@ -13,22 +7,8 @@
 \usepackage[table]{xcolor}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
-\newcommand{\ev}[1]{\mathbb{E}\left[#1\right]}
-\newcommand{\var}[1]{\text{Var}\left[#1\right]} 
 
-% \newcommand{\kmax}{k_{\text{max}}}
-% \newcommand{\kmax}[1]{k_{\text{max}(#1)}}
-% \newcommand{\kmax}[jj]{k_{\text{max}#1}}
-
-\NewDocumentCommand{\kmax}{o}{%
-    {%
-        \IfNoValueTF {#1}{
-          k_{\text{max}} 
-        }{ 
-          k_{\text{max}(#1)} 
-        }%
-    }%
-}
+\newcommand{\kmax}{k_{\text{max}}}
 \newcommand{\lambdagrid}{\lambda^{\text{grid}}}
 
 \begin{document}
