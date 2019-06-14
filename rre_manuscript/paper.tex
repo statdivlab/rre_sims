@@ -10,7 +10,12 @@
 \usepackage{amsmath}
 \usepackage{xparse}
 \usepackage{mathtools}
-\usepackage[table]{xcolor}
+\usepackage[table,dvipsnames]{xcolor}
+
+
+\usepackage{ifthen}
+\usepackage{pstricks}
+
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \newcommand{\ev}[1]{\mathbb{E}\left[#1\right]}
@@ -31,40 +36,57 @@
 }
 \newcommand{\lambdagrid}{\lambda^{\text{grid}}}
 
+
+
+\newboolean{DEBUG}
+\setboolean{DEBUG}{true}
+
+\newrgbcolor{amycolor}{.7 .1 .1}
+\ifthenelse {\boolean{DEBUG}}
+{\newcommand{\amy}[1]{{\bf \amycolor{[\@Amy: #1]}}}}
+{\newcommand{\amy}[1]{}}
+
+\newrgbcolor{alexcolor}{.1 .7 .7}
+\ifthenelse {\boolean{DEBUG}}
+{\newcommand{\alex}[1]{{\bf \alexcolor{[\@alex: #1]}}}}
+{\newcommand{\brian}[1]{}}
+
 \begin{document}
 
 
 % Title of paper
-\title{Tuning parameter selection for a penalized maximum likelihood estimator of species richness}
+\title{Tuning parameter selection for a penalized estimator of species richness}
 
 % List of authors, with corresponding author marked by asterisk
-\author{ALEX PAYNTER$^\ast$, AMY WILLIS\\[4pt]
+\author{ALEX PAYNTER, AMY D WILLIS$^\ast$\\[4pt]
 % Author addresses
 \textit{Department of Biostatistics,
 University of Washington,
 Health Sciences Building, Box 357232,
 1705 NE Pacific St., Seattle, WA 98195}
-\\[2pt]
-% E-mail address for correspondence
-{payntera@uw.edu adwillis@uw.edu}}
+% \\[2pt]
+% % E-mail address for correspondence
+% {payntera@uw.edu, adwillis@uw.edu}
+}
 
 % Running headers of paper:
 \markboth%
 % First field is the short list of authors
-{A. Paynter and others}
+{A. Paynter and A.D. Willis}
 % Second field is the short title of the paper
-{Tuning parameter selection in species richness estimation}
+{Tuning parameter selection for species richness}
 
 \maketitle
 
 % Add a footnote for the corresponding author if one has been
 % identified in the author list
-\footnotetext{To whom correspondence should be addressed.}
+\footnotetext{adwillis@uw.edu}
 
 \begin{abstract}
 {Our goal is estimating the true number of classes in a population.   We focus on the scenario where multiple frequency count tables have been collected from the same population.  In this setting we demonstrate the efficacy of a previously published penalized maximum likelihood method.  Four novel methods to tune the requisite penalization parameter are proposed.  The performance of all proposed tuning methods is compared in simulations.}
 \end{abstract}
 
+\amy{Happy to discuss, but I think it's probably easiest for me to be corresponding author, because you won't have your UW e-mail forever}
 
 \section{Introduction}
 \label{sec:introduction}
