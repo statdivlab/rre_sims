@@ -1,0 +1,10 @@
+rre_manuscript/paper.pdf
+
+*.DS_Store
+
+*.aux
+*.blg
+*.fls
+*xmk
+*.synctex.gz
+*.log

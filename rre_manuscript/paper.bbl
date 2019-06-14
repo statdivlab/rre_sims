@@ -1,0 +1,131 @@
+\begin{thebibliography}{99}
+
+\bibitem[Barger \emph{and others}(2010)Barger, Bunge  et~al.]{barger_2010}
+\textsc{Barger, Kathryn, Bunge, John  \emph{and others}}. (2010).
+\newblock Objective bayesian estimation for the number of species.
+\newblock {\em Bayesian Analysis\/}~\textbf{5}(4), 765--785.
+
+\bibitem[Bulmer(1974)Bulmer]{bulmer_1974}
+\textsc{Bulmer, MG}. (1974).
+\newblock On fitting the poisson lognormal distribution to species-abundance
+  data.
+\newblock {\em Biometrics\/}, 101--110.
+
+\bibitem[Bunge and Fitzpatrick(1993)Bunge and Fitzpatrick]{bunge_1993}
+\textsc{Bunge, John and Fitzpatrick, Michael}. (1993).
+\newblock Estimating the number of species: a review.
+\newblock {\em Journal of the American Statistical
+  Association\/}~\textbf{88}(421), 364--373.
+
+\bibitem[Bunge \emph{and others}(2014)Bunge, Willis and Walsh]{bunge_2014}
+\textsc{Bunge, John, Willis, Amy and Walsh, Fiona}. (2014).
+\newblock Estimating the number of species in microbial diversity studies.
+\newblock {\em Annual Review of Statistics and Its Application\/}~\textbf{1},
+  427--445.
+
+\bibitem[Chao(1987)Chao]{chao_1987}
+\textsc{Chao, Anne}. (1987).
+\newblock Estimating the population size for capture-recapture data with
+  unequal catchability.
+\newblock {\em Biometrics\/}, 783--791.
+
+\bibitem[Chao and Bunge(2002)Chao and Bunge]{chao_2002}
+\textsc{Chao, Anne and Bunge, John}. (2002).
+\newblock Estimating the number of species in a stochastic abundance model.
+\newblock {\em Biometrics\/}~\textbf{58}(3), 531--539.
+
+\bibitem[Efron and Thisted(1976)Efron and Thisted]{efron_1976}
+\textsc{Efron, Bradley and Thisted, Ronald}. (1976).
+\newblock Estimating the number of unseen species: How many words did
+  shakespeare know?
+\newblock {\em Biometrika\/}~\textbf{63}(3), 435--447.
+
+\bibitem[Fegatelli and Tardella(2018)Fegatelli and Tardella]{fegatelli_2018}
+\textsc{Fegatelli, Danilo~Alunni and Tardella, Luca}. (2018).
+\newblock Moment-based bayesian poisson mixtures for inferring unobserved
+  units.
+\newblock {\em arXiv preprint arXiv:1806.06489\/}.
+
+\bibitem[Fisher \emph{and others}(1943)Fisher, Corbett and
+  Williams]{fisher_1943}
+\textsc{Fisher, RA, Corbett, AS and Williams, CB}. (1943).
+\newblock The relationship between the number of species and the number of
+  individuals in a random sample of an animal population: Journal animal
+  ecology, v. 12.
+
+\bibitem[Good(1953)Good]{good_1953}
+\textsc{Good, Irving~J}. (1953).
+\newblock The population frequencies of species and the estimation of
+  population parameters.
+\newblock {\em Biometrika\/}~\textbf{40}(3-4), 237--264.
+
+\bibitem[Greenwood and Yule(1920)Greenwood and Yule]{greenwood_1920}
+\textsc{Greenwood, Major and Yule, G~Udny}. (1920).
+\newblock An inquiry into the nature of frequency distributions representative
+  of multiple happenings with particular reference to the occurrence of
+  multiple attacks of disease or of repeated accidents.
+\newblock {\em Journal of the Royal statistical society\/}~\textbf{83}(2),
+  255--279.
+
+\bibitem[Lindsay and Roeder(1987)Lindsay and Roeder]{lindsay_1987}
+\textsc{Lindsay, Bruce~G and Roeder, Kathryn}. (1987).
+\newblock A unified treatment of integer parameter models.
+\newblock {\em Journal of the American Statistical
+  Association\/}~\textbf{82}(399), 758--764.
+
+\bibitem[Norris and Pollock(1998)Norris and Pollock]{norris_1998}
+\textsc{Norris, James~L and Pollock, Kenneth~H}. (1998).
+\newblock Non-parametric mle for poisson species abundance models allowing for
+  heterogeneity between species.
+\newblock {\em Environmental and Ecological Statistics\/}~\textbf{5}(4),
+  391--402.
+
+\bibitem[Ord and Whitmore(1986)Ord and Whitmore]{ord_1986}
+\textsc{Ord, J~Keith and Whitmore, G~Alex}. (1986).
+\newblock The poisson-inverse gaussian disiribuiion as a model for species
+  abundance.
+\newblock {\em Communications in Statistics-theory and
+  Methods\/}~\textbf{15}(3), 853--871.
+
+\bibitem[{R Core Team}(2018){R Core Team}]{r_project}
+\textsc{{R Core Team}}. (2018).
+\newblock {\em R: A Language and Environment for Statistical Computing\/}.
+\newblock R Foundation for Statistical Computing, Vienna, Austria.
+
+\bibitem[Sanathanan(1977)Sanathanan]{sanathanan_1977}
+\textsc{Sanathanan, Lalitha}. (1977).
+\newblock Estimating the size of a truncated sample.
+\newblock {\em Journal of the American Statistical
+  Association\/}~\textbf{72}(359), 669--672.
+
+\bibitem[Sekirov \emph{and others}(2010)Sekirov, Russell, Antunes and
+  Finlay]{sekirov2010gut}
+\textsc{Sekirov, Inna, Russell, Shannon~L, Antunes, L Caetano~M and Finlay,
+  B~Brett}. (2010).
+\newblock Gut microbiota in health and disease.
+\newblock {\em Physiological reviews\/}~\textbf{90}(3), 859--904.
+
+\bibitem[Tromas \emph{and others}(2017)Tromas, Fortin, Bedrani, Terrat,
+  Cardoso, Bird, Greer and Shapiro]{tromas_2017}
+\textsc{Tromas, Nicolas, Fortin, Nathalie, Bedrani, Larbi, Terrat, Yves,
+  Cardoso, Pedro, Bird, David, Greer, Charles~W and Shapiro, B~Jesse}. (2017).
+\newblock Characterising and predicting cyanobacterial blooms in an 8-year
+  amplicon sequencing time course.
+\newblock {\em The ISME journal\/}~\textbf{11}(8), 1746.
+
+\bibitem[Walsh \emph{and others}(2014)Walsh, Smith, Owens, Duffy and
+  Frey]{walsh2014restricted}
+\textsc{Walsh, Fiona, Smith, Daniel~P, Owens, Sarah~M, Duffy, Brion and Frey,
+  J{\"u}rg~E}. (2014).
+\newblock Restricted streptomycin use in apple orchards did not adversely alter
+  the soil bacteria communities.
+\newblock {\em Frontiers in microbiology\/}~\textbf{4}, 383.
+
+\bibitem[Wang and Lindsay(2005)Wang and Lindsay]{wang_2005}
+\textsc{Wang, Ji-Ping~Z and Lindsay, Bruce~G}. (2005).
+\newblock A penalized nonparametric maximum likelihood approach to species
+  richness estimation.
+\newblock {\em Journal of the American Statistical
+  Association\/}~\textbf{100}(471), 942--959.
+
+\end{thebibliography}
