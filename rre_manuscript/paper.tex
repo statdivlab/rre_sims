@@ -74,6 +74,9 @@ Our method penalises the probability of a class being unobserved, since high pro
 
 \amy{Happy to discuss, but I think it's probably easiest for me to be corresponding author, because you won't have your UW e-mail forever}
 
+% TODO(Amy)
+% - go through all references and confirm used correctly
+
 \section{Introduction}
 \label{sec:introduction}
 
@@ -84,7 +87,7 @@ In ecology, species richness is a quantitative measurement of ecosystem diversit
 Microbial diversity is often linked with ecosystem health, such as in the vaginal microbiome (where high diversity is associated with infection \citep{Oakley:2008uo}) and in the gut microbiome (where high diversity is associated with healthy metabolism \citep{Morgan:2012bm,Minot:2019hc}).
 Microbial abundance data typically contain many species observed infrequently (\textit{rare species}) and some which are observed a large number of times (\textit{abundant species}).  In data with both many rare and many abundant species, richness estimation methods often have high variance \citep{wang_2005,willis_2015}, motivating our regularised approach to estimation.
 
-In this paper we consider the penalised maximum likelihood approach of \citet{wang_2005} and investigate the open problem of selecting the penalization parameter. Because the true species richness $C$ is never observed for any sample, common approaches to tuning parameter selection (e.g., cross validation) cannot be readily applied in our case. We propose utilizing biological replicates to aid tuning, and so we extend the proposal of \citet{wang_2005} to the analysis of independent but homogeneous ecosystems.
+In this paper we consider the penalized maximum likelihood approach of \citet{wang_2005} and investigate the open problem of selecting the penalization parameter. Because the true species richness $C$ is never observed for any sample, common approaches to tuning parameter selection (e.g., cross validation) cannot be employed. We propose using biological replicates to aid tuning.%, and so we extend the proposal of \citet{wang_2005} to the analysis of independent but homogeneous ecosystems.
 We find that replicate data is advantageous for tuning the required penalization parameter and provide a comparison of the performance of 4 proposed methods for tuning parameter selection.
 
 This paper is organized as follows: We review species richness estimation in Section \ref{sec:literature_review}.  In Section \ref{sec:fixed_lambda} we describe our extension to biological replicates, and in Section \ref{sec:efficacy_sims} we establish the utility of penalization via simulations. In Section \ref{sec:tuning_proposals} we propose several novel methods for tuning the penalization parameter, and in Section \ref{sec:tuning_simulations}
@@ -94,10 +97,11 @@ we evaluate our proposals. \amy{Section \ref{sec:data_analysis} applies our meth
 \section{Literature Review}
 
 \label{sec:literature_review}
-\amy{up to here with editing}
+
+\subsection{Poisson mixture models}
 
 The classical model for estimating species abundance is a Poisson mixture model.  Under this model the number of times we observe an species $i$ is $X_i \sim \text{Poisson}(\Lambda)$ where $\Lambda$ is a random variable distributed according to some mixing distribution.
-Many mixing distributions have been proposed, including  \cite{bulmer_1974,ord_1986,norris_1998} (see \cite{bunge_1993} for a comprehensive review). While our proposal may be easily generalized to other mixing distributions, in this paper we consider the Gamma  distribution for $\Lambda$, a proposal first considered by \citet{fisher_1943}.
+Many mixing distributions have been proposed, including by  \cite{bulmer_1974,ord_1986,norris_1998} (see \cite{bunge_1993} for a comprehensive review). While our proposal may be easily generalized to other mixing distributions, in this paper we consider the Gamma  distribution for $\Lambda$, a proposal first considered by \citet{fisher_1943}.
 
 
 Let $f_k = \#\{i: X_i = k\}$ be the number of classes observed $k$ times, called the \textit{frequencies} or \textit{frequency counts}.  Then the set $\{f_k\}_{k \geq 1}$ is a \textit{frequency count table}, a common way to represent species abundance data. Because $C = f_0 + f_1 + f_2 + \dots = f_0 + c$, the species problem can be framed as predicting $f_0$ to obtain the species richness estimate $\hat{C} = \hat{f}_0 + c$.
@@ -110,7 +114,11 @@ Let $\Lambda \sim \text{Gamma}(\alpha, \delta)$ with distribution function $f(\l
 % Note that we are interested in estimating the parameters of a negative binomial
 % a zero-truncated negative binomial
 %
-There exist both frequentist \citep{fisher_1943} and Bayesian \citep{efron_1976,barger_2010} approaches to parameter estimation under this model. We will focus on focus on frequentist maximum likelihood in this paper.  The most straightforward maximum likelihood approach is to simultaneously maximize $C$ and $\eta$ using the full likelihood, which is known as the \textit{direct} approach.  A complication in this model is that we have continuous parameters $\eta$ as well as one discrete parameter $C$, and so derivative-based optimization methods are not appropriate.  This issue has been studied by \citet{lindsay_1987}, who provide a discrete analog to the score function for this model.  %However, they point out that the asymptotics required use $C \to \infty$, which may not be appropriate for all problems.
+There exist both frequentist \citep{fisher_1943} and Bayesian \citep{efron_1976,barger_2010} approaches to parameter estimation under this model. We will focus on focus on frequentist maximum likelihood in this paper.
+
+\subsection{Estimation and computation}
+
+The most straightforward maximum likelihood approach is to simultaneously maximize $C$ and $\eta$ using the full likelihood, which is known as the \textit{direct} approach.  A complication in this model is that we have continuous parameters $\eta$ as well as one discrete parameter $C$, and so derivative-based optimization methods are not appropriate.  This issue has been studied by \citet{lindsay_1987}, who provide a discrete analog to the score function for this model.  %However, they point out that the asymptotics required use $C \to \infty$, which may not be appropriate for all problems.
 Two other approaches to likelihood maximization are the \textit{conditional} and \textit{profile} approaches.  The conditional approach \citep{sanathanan_1977} involves writing the likelihood as the product
 \begin{align}
  L(C, \eta) &= L_b(C, \eta)L_c(\eta) \label{eq:likelihood}
@@ -119,24 +127,43 @@ where
  \begin{align}
  L_b(C, \eta) &= \frac{C!}{(C-c)! \ c!} \left[1 - p_{\eta}(0) \right]^c \left[ p_{\eta}(0) \right]^{C-c}  %& \text{(``Binomial'' component)}
   \label{eq:binomial_likelihood}\\
- L_c(\eta) &= \frac{c!}{\displaystyle  \prod_{k \geq 1} f_k!} \prod_{k \geq 1} \left[ \frac{p_{\eta}(k)}{1-p_{\eta}(0)} \right]^{f_k}, \label{eq:conditional_likelihood} % & \text{(Multinomial component/``conditional'')}
+ L_c(\eta) &= \frac{c!}{\displaystyle  \prod_{k \geq 1} f_k!} \prod_{k \geq 1} \left[ \frac{p_{\eta}(k)}{1-p_{\eta}(0)} \right]^{f_k}. \label{eq:conditional_likelihood} % & \text{(Multinomial component/``conditional'')}
 \end{align}
-i.e., the likelihood is the product of a binomial probability mass function ($c \sim \text{Binomial}\left(C, 1- p_{\eta}(0)\right)$), and a multinomial probability mass function ($(f_1, f_2, \ldots)|c \sim \text{Multinomial}\left(c,  \frac{(p_{\eta}(1), p_{\eta}(2), \ldots)}{1-p_{\eta}(0)}\right)$).
+We see that the likelihood is the product of a binomial probability mass function ($c \sim$ Binomial$\left(C, 1- p_{\eta}(0)\right)$), and a multinomial probability mass function ($(f_1, f_2, \ldots)|c \sim$  Multinomial $\left(c,  \frac{(p_{\eta}(1), p_{\eta}(2), \ldots)}{1-p_{\eta}(0)}\right)$).
 This decomposition is convenient because $L_c$ is a function of $\eta$ alone.
 % $L_b$ shows the probability of observing $c$ species follows a binomial distribution, i.e. $c \sim \text{Binomial}\left(C, 1- p_{\eta}(0)\right)$.  Letting $\kmax$ be the largest $k$ such that $f_k > 0$, $L_c$ shows that observing the frequency counts given by $f_1, f_2, \dots , f_{\kmax}$ follows a multinomial distribution given $c$.  The multinomial cell probabilities are proportional to $p_{\eta}(k)$.
 \citet{sanathanan_1977}'s conditional approach involves first maximising  $L_c(\eta)$ to obtain a conditional abundance estimate $\widehat{\eta}_c$, then maximising $L_b(C, \widehat{\eta}_c)$ over $C$.
-
-\citet{sanathanan_1977} uses this decomposition to propose the conditional approach to likelihood maximization, which is done in two steps (see \citet{chao_2002} for a detailed presentation).  First we maximize $L_c(\eta)$ to obtain a conditional abundance estimate $\widehat{\eta}_c$.  Then $L_b(C, \widehat{\eta}_c)$ is maximized over $C$.  With $\eta$ fixed there is a closed form expression for this second step,
+The conditional estimate of $C$ is then
 \begin{equation}
 \widehat{C}_c = \Biggl\lfloor \frac{c}{1-p_{\widehat{\eta}_c}(0)} \Biggr\rfloor \label{eq:conditional_c}
 \end{equation}
 where $\lfloor a \rfloor$ is the largest integer less than or equal to $a$.  In the \textit{profile} likelihood approach the expression in Equation \ref{eq:conditional_c} is substituted into the full likelihood, which gives us a function of $\eta$ alone (see \citet{wang_2005}).  The conditional and profile approaches have been shown to be asymptotically equivalent to the direct approach.
+\amy{Need to justify why we are bringing this up}
 
-A perennial issue in the species problem is the instability of estimators, especially maximum likelihood estimators.  The estimates often have unacceptably high variance and can become dramatically inflated.  Fisher noted that if there are many low abundance species then $\alpha$ will be near 0.  The existence of highly abundant species, as we see in microbial data, tends to cause $\delta$ to be near 0 as well.  The tendency of both abundance parameters to be near their boundary is one way to explain why this instability issue has plagued the species problem over a variety of approaches, and is especially prominent in microbial data.
+% \citet{sanathanan_1977} uses this decomposition to propose the conditional approach to likelihood maximization, which is done in two steps (see \citet{chao_2002} for a detailed presentation).  First we maximize $L_c(\eta)$ to obtain a conditional abundance estimate $\widehat{\eta}_c$.  Then $L_b(C, \widehat{\eta}_c)$ is maximized over $C$.  With $\eta$ fixed there is a closed form expression for this second step,
+% \begin{equation}
+% \widehat{C}_c = \Biggl\lfloor \frac{c}{1-p_{\widehat{\eta}_c}(0)} \Biggr\rfloor %\label{eq:conditional_c}
+% \end{equation}
+% where $\lfloor a \rfloor$ is the largest integer less than or equal to $a$.  In the \textit{profile} likelihood approach the expression in Equation \ref{eq:conditional_c} is substituted into the full likelihood, which gives us a function of $\eta$ alone (see \citet{wang_2005}).  The conditional and profile approaches have been shown to be asymptotically equivalent to the direct approach.
 
-One way of improving stability is to abandon the Poisson mixture paradigm entirely.  Though we will focus on the gamma-Poisson model in this paper, we would be remiss if we did not briefly mention other popular alternatives.  Coverage-based estimators, which use the proportion of species observed $k$ times rather than the actual counts were originally proposed by \citet{good_1953} and remain popular.  Capture-recapture methods (see \citet{chao_1987}) have a deep literature in animal abundance studies but are not as applicable in microbial data where the sampling  destroys the organism.  See \citet{bunge_1993} for a comprehensive review and \citet{bunge_2014} for an updated review of species richness methods which are outside the scope of this paper.
+\subsection{Challenges with Poisson mixture models}
 
-A proposal which retains the gamma-Poisson model and encourages stability is suggested by \citet{wang_2005}.  Their proposal is to add a penalty term to the log likelihood, where the penalization is based on the probability of observing a species zero times (they give three penalty functions and we focus on only the first).  If we let $\ell(C,\eta)$ be the log likelihood, then they define a penalized log likelihood $\ell_{\lambda}(C, \eta)$ as
+
+A perennial issue in the species problem, especially for microbial datasets, is the instability of species richness estimators \citep{Rocchetti:2011tv,willis_2015}.
+%
+% Under the gamma-Poisson model,
+%
+% To illustrate, consider that a first-order approximation gives $$Var(\hat{C}_c | c) \approx \frac{c^2}{(1-\hat{p}(0))^4}Var(\hat{p}(0))$$ \amy{check this}
+% Therefore,
+% , especially maximum likelihood estimators.  The estimates often have unacceptably high variance and can become dramatically inflated.
+%
+\textcolor{blue}{Since $Pr(X = 0) = \left( \frac{\delta}{1 + \delta}\right)^\alpha$, if there are many low abundance species then $\alpha$ will be near 0. Many high abundance species, as we see in microbial data, tends to cause $\delta$ to be near 0 as well.  The tendency of both abundance parameters to be near their boundary is one way to explain why this instability issue has plagued the species problem over a variety of approaches, and is especially prominent in microbial data.}
+\amy{Clean up! Find unregularised estimates of alpha and delta for apples}
+
+% One way of improving stability is to abandon the Poisson mixture paradigm entirely.  Though we will focus on the gamma-Poisson model in this paper, we would be remiss if we did not briefly mention other popular alternatives.  Coverage-based estimators, which use the proportion of species observed $k$ times rather than the actual counts were originally proposed by \citet{good_1953} and remain popular.  Capture-recapture methods (see \citet{chao_1987}) have a deep literature in animal abundance studies but are not as applicable in microbial data where the sampling  destroys the organism.  See \citet{bunge_1993} for a comprehensive review and \citet{bunge_2014} for an updated review of species richness methods which are outside the scope of this paper.
+\amy{up to here with editing}
+
+A proposal which encourages stability of estimates under the gamma-Poisson model is due to \citet{wang_2005}.  Their proposal is to add a penalty term to the log likelihood, where the penalization is based on the probability of observing a species zero times (they give three penalty functions and we focus on only the first).  If we let $\ell(C,\eta)$ be the log likelihood, then they define a penalized log likelihood $\ell_{\lambda}(C, \eta)$ as
 \begin{equation}
 \ell_\lambda(C, \eta) = \ell(C,\eta) - \lambda \log p_{\eta}(0)
 \label{eq:wang_lindsay}
