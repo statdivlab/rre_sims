@@ -68,7 +68,8 @@ Health Sciences Building, Box 357232,
 \footnotetext{adwillis@uw.edu}
 
 \begin{abstract}
-{Our goal is estimating the true number of classes in a population.   We focus on the scenario where multiple frequency count tables have been collected from the same population.  In this setting we demonstrate the \edit{efficacy of a previously published penalized maximum likelihood method}.  Four novel methods to tune the requisite penalization parameter are proposed.  The performance of all proposed tuning methods is compared in simulations.}
+{Our goal is to estimate the true number of classes in a population, called the species richness.  We consider the case where multiple frequency count tables have been collected from a homogeneous population, and investigate a penalized maximum likelihood estimator under a negative binomial model.
+Our method penalises the probability of a class being unobserved, since high probabilities of unobserved classes increase the variance of species richness estimates. Tuning the penalisation parameter is challenging because the true species richness is never known, and so we propose and validate four novel methods to tune the penalization parameter.  We illustrate the performance of the method by estimating the microbial diversity of Lake Champlain over ...}
 \end{abstract}
 
 \amy{Happy to discuss, but I think it's probably easiest for me to be corresponding author, because you won't have your UW e-mail forever}
@@ -77,40 +78,53 @@ Health Sciences Building, Box 357232,
 \label{sec:introduction}
 
 The \textit{species problem} concerns estimating the number of classes $C$ that are present in a population.
-$n$ individuals from the population can be sampled to find which classes they belong to, but since the  number of individuals in the sample is less than the total population size (which may be infinite), only $c \leq C$ classes are observed. The problem is named for its origins in biological ecosystems, where $C$ is \textit{species richness}, or the total number of species.  However, methods developed for the species problem can be applied to applications far removed from biology.  For example, \citet{efron_1976} estimated the number of words Shakespeare truly knew by modeling the frequencies of words in his published work, and  \citet{fegatelli_2018} estimated the number of cars covered by an insurer based on accident data where $c$ cars had at least one accident.
+$n$ individuals from the population can be sampled to find which classes they belong to, but since the  number of individuals in the sample is less than the total population size (which may be infinite), only $c$ classes are observed ($c \leq C$). The problem is named for its origins in biological ecosystems, where $C$ is \textit{species richness}, or the total number of species.  However, methods developed for the species problem can be applied to applications far removed from biology.  For example, \citet{efron_1976} estimated the number of words Shakespeare truly knew by modeling the frequencies of words in his published work, and  \citet{fegatelli_2018} estimated the number of cars covered by an insurer based on accident data where $c$ cars had at least one accident.
 
 In ecology, species richness is a quantitative measurement of ecosystem diversity.  We focus on the specific application of estimating microbial diversity, that is, the number of strains of bacteria present in a population (e.g., a lake microenvironment or in an individual's oral cavity).
-Microbial diversity is often linked with ecosystem health, such as in the vaginal microbiome (where high diversity is associated with infection \cite{placeholder}) and in the gut microbiome (where high diversity is associated with healthy metabolism \cite{placeholder}).
-Microbial abundance data typically contain many species observed infrequently (\textit{rare species}) and some which are observed a large number of times (\textit{abundant species}).  In data with both many rare and many abundant species, richness estimation methods often have high variance \citep{willis_2015,bunge_2014} \amy{confirm most appropriate reference}, motivating a regularised estimation approach.
+Microbial diversity is often linked with ecosystem health, such as in the vaginal microbiome (where high diversity is associated with infection \citep{Oakley:2008uo}) and in the gut microbiome (where high diversity is associated with healthy metabolism \citep{Morgan:2012bm,Minot:2019hc}).
+Microbial abundance data typically contain many species observed infrequently (\textit{rare species}) and some which are observed a large number of times (\textit{abundant species}).  In data with both many rare and many abundant species, richness estimation methods often have high variance \citep{wang_2005,willis_2015}, motivating our regularised approach to estimation.
 
-In this paper we consider the penalised maximum likelihood approach of \citet{wang_2005} and investigate the open problem of selecting the penalization parameter. Because the true species richness $C$ is never observed for any sample, standard approaches for tuning parameter selection such as cross validation cannot be readily applied to the species problem. We propose analyzing biological replicates for tuning, thereby extending the proposal of \citet{wang_2005} to the analysis of independent but homogeneous ecosystems.
+In this paper we consider the penalised maximum likelihood approach of \citet{wang_2005} and investigate the open problem of selecting the penalization parameter. Because the true species richness $C$ is never observed for any sample, common approaches to tuning parameter selection (e.g., cross validation) cannot be readily applied in our case. We propose utilizing biological replicates to aid tuning, and so we extend the proposal of \citet{wang_2005} to the analysis of independent but homogeneous ecosystems.
 We find that replicate data is advantageous for tuning the required penalization parameter and provide a comparison of the performance of 4 proposed methods for tuning parameter selection.
 
-This paper is organized as follows: We review species richness estimation in Section \ref{sec:literature_review}.  In Section \ref{sec:fixed_lambda} we describe our extension to biological replicates.  In Section \ref{sec:efficacy_sims} we establish the utility of penalization via simulations. In Section \ref{sec:tuning_proposals} we propose several novel methods for tuning the penalization parameter, and in Section \ref{sec:tuning_simulations}
-we evaluate our proposals.  Section \ref{sec:discussion} closes with an expanded discussion of our results and suggested directions for future work. Software implementing the methods is available in the \url{R} package \url{rre}, available at \url{github.com/statdivlab/rre}, and code to reproduce the simulation results is available at \url{github.com/statdivlab/rre_sims}.
+This paper is organized as follows: We review species richness estimation in Section \ref{sec:literature_review}.  In Section \ref{sec:fixed_lambda} we describe our extension to biological replicates, and in Section \ref{sec:efficacy_sims} we establish the utility of penalization via simulations. In Section \ref{sec:tuning_proposals} we propose several novel methods for tuning the penalization parameter, and in Section \ref{sec:tuning_simulations}
+we evaluate our proposals. \amy{Section \ref{sec:data_analysis} applies our methods to microbiome data on Lake Champlain...} Section \ref{sec:discussion} closes with an expanded discussion of our results and suggested directions for future work. Software implementing the methods is available in the \url{R} package \url{rre}, available at \url{github.com/statdivlab/rre}, and code to reproduce the simulation results is available at \url{github.com/statdivlab/rre_sims}.
 
 
 \section{Literature Review}
 
 \label{sec:literature_review}
 \amy{up to here with editing}
+
 The classical model for estimating species abundance is a Poisson mixture model.  Under this model the number of times we observe an species $i$ is $X_i \sim \text{Poisson}(\Lambda)$ where $\Lambda$ is a random variable distributed according to some mixing distribution.
-Many mixing distributions have been proposed (see, e.g., \cite{bulmer_1974,ord_1986,norris_1998}, and \cite{bunge_1993} for a comprehensive review). While our proposal may be easily generalized to other mixing distributions, in this paper we consider the simple, interpretable gamma distribution, which was first proposed to model species abundances by \citet{fisher_1943}.
-Let $f_k = \#\{i: X_i = k\}$ be the number of classes observed $k$ times, called the \textit{frequencies} or \textit{frequency counts}.  Then the set $\{f_k\}_{k \geq 1}$ is a \textit{frequency count table}, a common way to represent species abundance data. The species problem is predicting $f_0$, because $C = f_0 + f_1 + f_2 + \dots = f_0 + c$.
+Many mixing distributions have been proposed, including  \cite{bulmer_1974,ord_1986,norris_1998} (see \cite{bunge_1993} for a comprehensive review). While our proposal may be easily generalized to other mixing distributions, in this paper we consider the Gamma  distribution for $\Lambda$, a proposal first considered by \citet{fisher_1943}.
 
-Let $\Lambda \sim \text{Gamma}(\alpha, \delta)$ with distribution function $f(\lambda) = \delta^\alpha \Gamma (\alpha)^{-1} \lambda^{\alpha - 1} e^{-\delta \lambda}$.  We use $\eta$ to reference the abundance parameters, so $\eta = (\alpha, \delta)$ in the gamma-Poisson model.  \citet{greenwood_1920} showed that the distribution of $X_i$ under a gamma-Poisson model can written as a negative-binomial distribution,
-\[ p_{\eta}(x) = \frac{\Gamma (x + \alpha)}{\Gamma (\alpha) x!} \left(\frac{\delta}{1+\delta} \right)^\alpha \left( \frac{1}{1+ \delta} \right)^x \]
-which makes it an especially convenient model to work with.
 
-There exist Bayesian (\citet{efron_1976}), objective Bayesian (\citet{barger_2010}) and other approaches to parameter estimation in addition to the maximum likelihood approach that Fisher used.  However, we will focus on focus on likelihood maximization in this paper.  The most straightforward maximum likelihood approach is to simultaneously maximize $C$ and $\eta$ using the full likelihood, which is known as the \textit{direct} approach.  A complication in this model is that we have continuous parameters $\eta$ as well as one discrete parameter $C$, so it is not immediately clear that derivative-based optimization methods are appropriate.  This issue has been studied by \citet{lindsay_1987} and they provide a discrete analog to the score function for this model and others.  However, they point out that the asymptotics required use $C \to \infty$, which may not be appropriate for all problems.
+Let $f_k = \#\{i: X_i = k\}$ be the number of classes observed $k$ times, called the \textit{frequencies} or \textit{frequency counts}.  Then the set $\{f_k\}_{k \geq 1}$ is a \textit{frequency count table}, a common way to represent species abundance data. Because $C = f_0 + f_1 + f_2 + \dots = f_0 + c$, the species problem can be framed as predicting $f_0$ to obtain the species richness estimate $\hat{C} = \hat{f}_0 + c$.
 
-There are two more major approaches to likelihood maximization, the \textit{conditional} and \textit{profile} approaches.  In order to understand these we review the work of \citet{sanathanan_1977}, who showed we can decompose the likelihood for the gamma-Poisson model into two parts.
+Let $\Lambda \sim \text{Gamma}(\alpha, \delta)$ with distribution function $f(\lambda) = \delta^\alpha \Gamma (\alpha)^{-1} \lambda^{\alpha - 1} e^{-\delta \lambda}$, and write $\eta = (\alpha, \delta)$.
+% Then the distribution of $X_i$ under a gamma-Poisson model can written as a negative-binomial distribution,
+% \begin{align}
+% p_{\eta}(x) = \frac{\Gamma (x + \alpha)}{\Gamma (\alpha) x!} \left(\frac{\delta}{1+\delta} \right)^\alpha \left( \frac{1}{1+ \delta} \right)^x.
+% \end{align}
+% Note that we are interested in estimating the parameters of a negative binomial
+% a zero-truncated negative binomial
+%
+There exist both frequentist \citep{fisher_1943} and Bayesian \citep{efron_1976,barger_2010} approaches to parameter estimation under this model. We will focus on focus on frequentist maximum likelihood in this paper.  The most straightforward maximum likelihood approach is to simultaneously maximize $C$ and $\eta$ using the full likelihood, which is known as the \textit{direct} approach.  A complication in this model is that we have continuous parameters $\eta$ as well as one discrete parameter $C$, and so derivative-based optimization methods are not appropriate.  This issue has been studied by \citet{lindsay_1987}, who provide a discrete analog to the score function for this model.  %However, they point out that the asymptotics required use $C \to \infty$, which may not be appropriate for all problems.
+Two other approaches to likelihood maximization are the \textit{conditional} and \textit{profile} approaches.  The conditional approach \citep{sanathanan_1977} involves writing the likelihood as the product
 \begin{align}
- L(C, \eta) &= L_b(C, \eta)L_c(\eta) \label{eq:likelihood}\\
- L_b(C, \eta) &= \frac{C!}{(C-c)! \ c!} \left[1 - p_{\eta}(0) \right]^c \left[ p_{\eta}(0) \right]^{C-c}  & \text{Binomial likelihood.} \label{eq:binomial_likelihood}\\
- L_c(\eta) &= \frac{c!}{\displaystyle  \prod_{k \geq 1} f_k!} \prod_{k \geq 1} \left[ \frac{p_{\eta}(k)}{1-p_{\eta}(0)} \right]^{f_k} \label{eq:conditional_likelihood}  & \text{Conditional likelihood.}
+ L(C, \eta) &= L_b(C, \eta)L_c(\eta) \label{eq:likelihood}
 \end{align}
-In this decomposition only $L_b$ depends on $C$, while $L_c$ is a function of $\eta$ alone.  $L_b$ shows the probability of observing $c$ species follows a binomial distribution, i.e. $c \sim \text{Binomial}\left(C, 1- p_{\eta}(0)\right)$.  Letting $\kmax$ be the largest $k$ such that $f_k > 0$, $L_c$ shows that observing the frequency counts given by $f_1, f_2, \dots , f_{\kmax}$ follows a multinomial distribution given $c$.  The multinomial cell probabilities are proportional to $p_{\eta}(k)$.
+where
+ \begin{align}
+ L_b(C, \eta) &= \frac{C!}{(C-c)! \ c!} \left[1 - p_{\eta}(0) \right]^c \left[ p_{\eta}(0) \right]^{C-c}  %& \text{(``Binomial'' component)}
+  \label{eq:binomial_likelihood}\\
+ L_c(\eta) &= \frac{c!}{\displaystyle  \prod_{k \geq 1} f_k!} \prod_{k \geq 1} \left[ \frac{p_{\eta}(k)}{1-p_{\eta}(0)} \right]^{f_k}, \label{eq:conditional_likelihood} % & \text{(Multinomial component/``conditional'')}
+\end{align}
+i.e., the likelihood is the product of a binomial probability mass function ($c \sim \text{Binomial}\left(C, 1- p_{\eta}(0)\right)$), and a multinomial probability mass function ($(f_1, f_2, \ldots)|c \sim \text{Multinomial}\left(c,  \frac{(p_{\eta}(1), p_{\eta}(2), \ldots)}{1-p_{\eta}(0)}\right)$).
+This decomposition is convenient because $L_c$ is a function of $\eta$ alone.
+% $L_b$ shows the probability of observing $c$ species follows a binomial distribution, i.e. $c \sim \text{Binomial}\left(C, 1- p_{\eta}(0)\right)$.  Letting $\kmax$ be the largest $k$ such that $f_k > 0$, $L_c$ shows that observing the frequency counts given by $f_1, f_2, \dots , f_{\kmax}$ follows a multinomial distribution given $c$.  The multinomial cell probabilities are proportional to $p_{\eta}(k)$.
+\citet{sanathanan_1977}'s conditional approach involves first maximising  $L_c(\eta)$ to obtain a conditional abundance estimate $\widehat{\eta}_c$, then maximising $L_b(C, \widehat{\eta}_c)$ over $C$.
 
 \citet{sanathanan_1977} uses this decomposition to propose the conditional approach to likelihood maximization, which is done in two steps (see \citet{chao_2002} for a detailed presentation).  First we maximize $L_c(\eta)$ to obtain a conditional abundance estimate $\widehat{\eta}_c$.  Then $L_b(C, \widehat{\eta}_c)$ is maximized over $C$.  With $\eta$ fixed there is a closed form expression for this second step,
 \begin{equation}
@@ -474,7 +488,7 @@ List of acknowledgements for formalize:
 {\it Conflict of Interest}:
 
 \bibliographystyle{biorefs}
-\bibliography{refs}
+\bibliography{refs,amys-papers-library}
 
 
 \end{document}

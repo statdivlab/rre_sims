@@ -59,19 +59,29 @@
   population parameters.
 \newblock {\em Biometrika\/}~\textbf{40}(3-4), 237--264.
 
-\bibitem[Greenwood and Yule(1920)Greenwood and Yule]{greenwood_1920}
-\textsc{Greenwood, Major and Yule, G~Udny}. (1920).
-\newblock An inquiry into the nature of frequency distributions representative
-  of multiple happenings with particular reference to the occurrence of
-  multiple attacks of disease or of repeated accidents.
-\newblock {\em Journal of the Royal statistical society\/}~\textbf{83}(2),
-  255--279.
-
 \bibitem[Lindsay and Roeder(1987)Lindsay and Roeder]{lindsay_1987}
 \textsc{Lindsay, Bruce~G and Roeder, Kathryn}. (1987).
 \newblock A unified treatment of integer parameter models.
 \newblock {\em Journal of the American Statistical
   Association\/}~\textbf{82}(399), 758--764.
+
+\bibitem[Minot and Willis(2019)Minot and Willis]{Minot:2019hc}
+\textsc{Minot, Samuel~S and Willis, Amy~D}. (2019, March).
+\newblock {Clustering co-abundant genes identifies components of the gut
+  microbiome that are reproducibly associated with colorectal cancer and
+  inflammatory bowel disease}.
+\newblock {\em bioRxiv\/}, 567818.
+
+\bibitem[Morgan \emph{and others}(2012)Morgan, Tickle, Sokol, Gevers, Devaney,
+  Ward, Reyes, Shah, LeLeiko, Snapper, Bousvaros, Korzenik, Sands, Xavier and
+  Huttenhower]{Morgan:2012bm}
+\textsc{Morgan, Xochitl~C, Tickle, Timothy~L, Sokol, Harry, Gevers, Dirk,
+  Devaney, Kathryn~L, Ward, Doyle~V, Reyes, Joshua~A, Shah, Samir~A, LeLeiko,
+  Neal, Snapper, Scott~B, Bousvaros, Athos, Korzenik, Joshua, Sands, Bruce~E,
+  Xavier, Ramnik~J} \emph{and others}. (2012, September).
+\newblock {Dysfunction of the intestinal microbiome in inflammatory bowel
+  disease and treatment}.
+\newblock {\em Genome Biology\/}~\textbf{13}(9), R79.
 
 \bibitem[Norris and Pollock(1998)Norris and Pollock]{norris_1998}
 \textsc{Norris, James~L and Pollock, Kenneth~H}. (1998).
@@ -79,6 +89,15 @@
   heterogeneity between species.
 \newblock {\em Environmental and Ecological Statistics\/}~\textbf{5}(4),
   391--402.
+
+\bibitem[Oakley \emph{and others}(2008)Oakley, Fiedler, Marrazzo and
+  Fredricks]{Oakley:2008uo}
+\textsc{Oakley, Brian~B, Fiedler, Tina~L, Marrazzo, Jeanne~M and Fredricks,
+  David~N}. (2008).
+\newblock {Diversity of human vaginal bacterial communities and associations
+  with clinically defined bacterial vaginosis}.
+\newblock {\em Applied and Environmental Microbiology\/}~\textbf{74}(15),
+  4898--4909.
 
 \bibitem[Ord and Whitmore(1986)Ord and Whitmore]{ord_1986}
 \textsc{Ord, J~Keith and Whitmore, G~Alex}. (1986).
