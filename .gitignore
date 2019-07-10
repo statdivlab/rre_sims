@@ -8,3 +8,4 @@ rre_manuscript/paper.pdf
 *xmk
 *.synctex.gz
 *.log
+.Rproj.user

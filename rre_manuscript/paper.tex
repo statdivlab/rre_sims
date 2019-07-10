@@ -29,7 +29,7 @@
 
 \newrgbcolor{alexcolor}{.1 .7 .7}
 \ifthenelse {\boolean{DEBUG}}
-{\newcommand{\alex}[1]{{\bf \alexcolor{[\@alex: #1]}}}}
+{\newcommand{\alex}[1]{{\bf \alexcolor{[\@Alex: #1]}}}}
 {\newcommand{\alex}[1]{}}
 
 \newrgbcolor{editcolor}{.1 .5 .7}
@@ -74,6 +74,7 @@ Our method penalises the probability of a class being unobserved, since high pro
 \end{abstract}
 
 \amy{Happy to discuss, but I think it's probably easiest for me to be corresponding author, because you won't have your UW e-mail forever}
+\alex{Having you as the corresponding author sounds great, just didn't want to volunteer you for unwanted emails until we discussed!}
 
 % TODO(Amy)
 % - go through all references and confirm used correctly
@@ -490,6 +491,34 @@ In Figure \ref{fig:tuning_sim_2} we display boxplots of the $C$ estimates over a
 \subsection{Simulation Conclusions}
 
 As a result of these simulations, we conclude that none of the methods (including method 0) are best for all simulation settings.  Method 1 resulted in a strong negative bias no matter which data are being analyzed.  Method 3 had better performance than Method 0 when there are highly abundant species present in the data, which makes Method 0 highly unstable.  When there are many rare species Method 3 is better than methods 1, 2 and 4 but not necessarily Method 0.  Method 3 also improved relative to Method 0 with greater $r$ and appears to better adapt to the data.  Methods 2 and 4 had lower RMSE than Method 0 when highly abundant species exist, but we cannot recommend them over Method 3 due to their inferior performance on data dominated by rare species.
+
+\section{Data Analysis}
+\label{sec:data_analysis}
+
+\alex{Data analysis writeup is forthcoming.  For now, here are the results with the same C grid we used in simulations.   I will give more thought into the best way to display these.}
+
+\begin{table}[h]
+\tblcaption{Estimates using a series of three samples drawn in consecutive years from the lakes data.  Only replicates from the Summer months and the Littoral region of the lake are included in the samples.  $\widehat{C}_{[\text{method}]}$ is the $C$ estimate obtained using the methods defined in Section \ref{sec:tuning_proposals}, shown for each sample.  The number of replicates in each sample is given by $r$.
+\label{tab:data_analysis}}
+\centering
+\begin{tabular}{|r|r|r|r|}
+  \hline
+& 2009  & 2010 & 2011 \\ 
+  \hline
+$\widehat{C}_{[0]}$ & 11200 & 11440 & 14014 \\ 
+  $\widehat{C}_{[1]}$ & 9645 & 11139 & 12246 \\ 
+  $\widehat{C}_{[2]}$ & 10612 & 11120 & 11946 \\ 
+  $\widehat{C}_{[3]}$ & 11200 & 11440 & 14014 \\ 
+  $\widehat{C}_{[4]}$ & 10744 & 11165 & 10328 \\ 
+   \hline
+     $r$ & 8 & 6 & 6 \\
+  \hline
+\end{tabular}
+\end{table}
+
+\noindent \alex{The reason for running an expanded C grid is that many of the estimates in this table are near the boundary of our grid (11,200, 11,440 and 14,300 respectively).  I'm not concerned that the estimates might be too large/bad, but I am concerned that this may be obscuring differences between the methods.}
+
+
 
 \section{Discussion}
 \label{sec:discussion}
