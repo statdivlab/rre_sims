@@ -13,32 +13,89 @@ source("./figures_tables.R")
 
 ## Introduction
 
-In this document we show the data analysis results using two choices of $C$ grid.  We first used the small grid and noticed that the $\widehat{C}$ estimates were near the upper bound of the grid for many of the methods.  This motivated the use of a larger grid to see if the results were the same.
+In this document we show the data analysis results using two choices for $C$ grid.  The small grid was our pre-specified plan, and we noticed that the $\widehat{C}$ estimates were near the upper bound of the grid for many of the methods.  This motivated the use of a larger grid to see if the results were the same.
 
 # 
 
 ## Small $C$ grid.
 
-Let $c$ be the maximum observed richness of a sample (maximum over the replciates).  In the small $C$ grid simulation we iterate our optimization over $C = \{c, 1.2*c, 1.4*c, \dots, 20*c\}$, or in other words we ignore the possibility that the coverage of our sample could be under 5\%.  This is the same grid we used in all simulations.  After running our algorithm with all methods we find
+Let $c$ be the maximum observed richness of a sample (maximum over the replciates).  In the small $C$ grid simulation we iterate our optimization over $C = \{c, 1.2*c, 1.4*c, \dots, 20*c\}$, or in other words we set a lower bound for the coverage of our sample at 5\%.  This is the same grid we used in all simulations.  After running our algorithm with all methods we find
 
 ```{r small_out}
-process_sample_list(lakes_results, 
-                    sample_names = 2009:2011,
-                    latex_format = F)
-
+small_out <- process_sample_list(lakes_results,
+                                 sample_names = 2009:2011,
+                                 latex_format = F)
+small_out
+```
+Here is a very preliminary plot, with the points slightly horizontally jittered:
+```{r small_plot}
+library(ggplot2)
+# Room for improvement here:
+plot_fn <- function(output_mat) {
+  df <- output_mat %>%
+    as.data.frame %>%
+    tibble::rownames_to_column(.) %>%
+    tidyr::gather(., key = "year", value = "estimate", -rowname) 
+  
+  # cleaning up names:
+  df["method"] <-df[["rowname"]] %>%
+    stringr::str_replace(., "_", " ") %>%
+    stringr::str_replace(., "m", "M") %>%
+    factor(., levels = unique(.))
+  
+  pd <- position_dodge(0.1)
+  ggplot(df, aes(x = year, y = estimate, group = method, color = method)) +
+    geom_point(position = pd) + 
+    geom_line(position = pd) +
+    labs(y = "C estimate", x = "year")
+}
+plot_fn(small_out)
 ```
 
-Given that the maximum observed richness in the samples is `r get_cc(lakes_results)` this caps our $C$ estimates at `r formatC(get_cc(lakes_results) * 20, format = "d")` respecitvely.  Therefore we have many estimates which are near the arbitrarily chosen upper bound of our $C$ grid.
+Given that the maximum observed richness in 2009, 2010, 2011 is `r get_cc(lakes_results)`,  this caps our $C$ estimates at `r formatC(get_cc(lakes_results) * 20, format = "d")` respecitvely.  Therefore we have many estimates which are near the arbitrarily chosen upper bound of our $C$ grid.  
 
 ## Large $C$ grid
 
-In the large $C$ grid we iterate over $C = \{c, 1.5*c, 2*c, \dots, 50*c\}$. 
+In the large $C$ grid we iterate over $C = \{c, 1.5*c, 2*c, \dots, 50*c\}$, and the results are
 
-# Common settings
+```{r big_out}
+big_out <- process_sample_list(lakes_results_bigger_C_grid, 
+                    sample_names = 2009:2011,
+                    latex_format = F)
+big_out
 
-The following settings are consistent in both analyses:
+```
 
-- The data is a series of three samples from the littoral region in the Summer: 2009, 2010 and 2011.  These have $r$ = 8,6,6 (replicates) respectively.
-- The $\lambda^{\text{grid}}$ is $\{0, 10, 20, \dots , 140\}$ which is the largest grid we used in any simulation.
-- Optimization starts for $\eta = (\alpha, \delta)$ include two fixed starts and one borrowed from the maximum likelihood solution in the previous $C$.
+
+Here is a very preliminary plot, with the points slightly horizontally jittered:
+```{r big_plot}
+library(ggplot2)
+# Room for improvement here:
+plot_fn <- function(output_mat) {
+  df <- output_mat %>%
+    as.data.frame %>%
+    tibble::rownames_to_column(.) %>%
+    tidyr::gather(., key = "year", value = "estimate", -rowname) 
+  
+  # cleaning up names:
+  df["method"] <-df[["rowname"]] %>%
+    stringr::str_replace(., "_", " ") %>%
+    stringr::str_replace(., "m", "M") %>%
+    factor(., levels = unique(.))
+  
+  pd <- position_dodge(0.1)
+  ggplot(df, aes(x = year, y = estimate, group = method, color = method)) +
+    geom_point(position = pd) + 
+    geom_line(position = pd) +
+    labs(y = "C estimate", x = "year")
+}
+plot_fn(big_out)
+```
+
+
+Our results for 2009, 2010, 2011 under this analysis are capped at `r formatC(get_cc(lakes_results) * 50, format = "d")`.  Unfortunately many of the results are still very close to the upper bound.
+
+## Conclusions
+
+We don't learn anything new by expanding the $C$ grid.  We might learn more by tinkering with the $\lambda^{\text{grid}}$, but I'm inclined to just report the results of the small grid which is what we did in our simulations.  We can discuss the difficulty in selecting of $\lambda^{\text{grid}}$ as a limitation.
 

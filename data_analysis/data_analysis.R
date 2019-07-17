@@ -71,7 +71,7 @@ save(lakes_results,
      file = "./data_analysis_results.RData")
 lakes_results_bigger_C_grid <- lapply(list_of_samples, run_methods,
                                       multiplier = 50,
-                                      c_seq_len = 246)
+                                      c_seq_len = 99)
 save(lakes_results_bigger_C_grid,
      file = "./data_analysis_results_big_C.RData")
 

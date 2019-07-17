@@ -32,7 +32,7 @@ process_sample_list <- function(list_of_sample_outs,
                                 sample_names = NA,
                                 latex_format = T) {
   table_output <- lapply(list_of_sample_outs, process_sample) %>%
-    do.call(cbind,.) 
+    do.call(cbind,.)
   if (any(!is.na(sample_names))) {
     colnames(table_output) <- sample_names
   }
@@ -47,7 +47,7 @@ process_sample_list <- function(list_of_sample_outs,
       santitize.colnames.function = identity
     )
   } else { # console output
-    table_output
+    ceiling(table_output)
   }
 }
 
