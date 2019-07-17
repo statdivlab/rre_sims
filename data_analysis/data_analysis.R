@@ -1,13 +1,14 @@
 library(magrittr)
 library(rre)
-setwd("/Users/alex/Dropbox/blups/code/rre_sims/")
+setwd("/Users/alex/Dropbox/blups/code/rre_sims/data_analysis/")
+
 lakes <- readr::read_tsv("./lakes_data.txt") %>% as.data.frame()
 lakes_metadata <- readr::read_tsv("./lakes_metadata.txt") %>% as.data.frame()
 
 # Deciding which samples to extract:
 lakes_metadata %>% 
   dplyr::group_by(Site, Years, Period) %>%
-  dplyr::summarize(number = n()) %>%
+  dplyr::summarize(number = dplyr::n()) %>%
   dplyr::arrange(Site, Period, Years) %>%
   print(n = 500)
 
@@ -39,29 +40,46 @@ get_samples <- function(yr, zone, per = NULL, month = NULL) {
 # Note that one of the metadata files matches no lakes sample ID:  12.07.11.1
 list_of_samples <- mapply(get_samples, seq(2009, 2011), "Littoral", "Summer")
 
-run_methods <- function(fct_sample, lambda_grid = seq(0,140,by=10)) {
+run_methods <- function(fct_sample, lambda_grid = seq(0,140,by=10),
+                        multiplier = 20, # default for all methods.
+                        c_seq_len = 96) {
   fct_sample %>%
-    list(method_0 = rre::unregularized_mle(.),
+    list(method_0 = rre::unregularized_mle(., multiplier = multiplier,
+                                           c_seq_len = c_seq_len),
          method_1 = rre::minimum_subset_distance(.,
                                                  lambda_vec = lambda_grid,
-                                                 partitions = 10),
+                                                 partitions = 10,
+                                                 multiplier = multiplier,
+                                                 c_seq_len = c_seq_len),
          method_2 = rre::cv_replicates(.,  eval_function = "neg_unreg_like",
                                        lambda_vec = lambda_grid,
-                                       partitions = 10),
-         method_3 = rre::gof_criterion(., lambda_vec = lambda_grid),
+                                       partitions = 10,
+                                       multiplier = multiplier,
+                                       c_seq_len = c_seq_len),
+         method_3 = rre::gof_criterion(., lambda_vec = lambda_grid,
+                                       multiplier = multiplier,
+                                       c_seq_len = c_seq_len),
          method_4 = rre::cv_replicates(.,  eval_function = "gof_chi_sq",
                                        lambda_vec = lambda_grid,
-                                       partitions = 10))
+                                       partitions = 10,
+                                       multiplier = multiplier,
+                                       c_seq_len = c_seq_len))
 }
 
-lakes_results <- lapply(list_of_samples, run_methods)
+lakes_results <- lapply(list_of_samples, run_methods) # default args
+save(lakes_results,
+     file = "./data_analysis_results.RData")
+lakes_results_bigger_C_grid <- lapply(list_of_samples, run_methods,
+                                      multiplier = 50,
+                                      c_seq_len = 246)
+save(lakes_results_bigger_C_grid,
+     file = "./data_analysis_results_big_C.RData")
+
 
 # apples_results <- breakaway::apples %>%
 #  list(.) %>%
 #  list(method_0 = rre::unregularized_mle(.),
 #        method_3 = rre::gof_criterion(., lambda_vec = lambda_grid))
-
-save(lakes_results, file = "./data_analysis/data_analysis_results.RData")
 
 lakes_results %>% lapply(. (function(y) lapply(y, function(x) x$best )))
 

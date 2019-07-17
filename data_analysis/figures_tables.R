@@ -6,7 +6,11 @@ get_n <- function(list_of_samples) {
   lapply(list_of_samples, get_n_one_sample) %>% unlist
 }
 
-get_n(lakes_results)
+# Temporary while running C grid sensitivity analysis:
+get_cc <- function(list_of_results) {
+  one_sample <- function(samp) samp[[1]] %>% rre::get_cc_max(.)
+  lapply(list_of_results, one_sample) %>% unlist
+}
 
 get_estimate <- function(result) {
   best <- result %>% '[['(.,"best") 
@@ -48,16 +52,16 @@ process_sample_list <- function(list_of_sample_outs,
 }
 
 
-setwd("./data_analysis") 
 load("data_analysis_results.RData")
-process_sample_list(lakes_results, 
-                    sample_names = 2009:2011,
-                    latex_format = T)
+load("data_analysis_results_big_C.RData")
 
-# Temporary while running C grid sensitivity analysis:
-get_cc <- function(list_of_results) {
-  one_sample <- function(samp) samp[[1]] %>% rre::get_cc_max(.)
-  lapply(list_of_results, one_sample) %>% unlist
-}
+# latex table outputs:
 
-get_cc(lakes_results) * 20 # extent of grid
+
+#process_sample_list(lakes_results, 
+#                    sample_names = 2009:2011,
+#                    latex_format = T)
+
+#process_sample_list(lakes_results, 
+#                    sample_names = 2009:2011,
+#                    latex_format = T)

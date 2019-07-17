@@ -1,0 +1,44 @@
+---
+title: "Data Analysis Comparison"
+author: "Alex Paynter"
+date: "7/16/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+library(magrittr)
+source("./figures_tables.R")
+```
+
+## Introduction
+
+In this document we show the data analysis results using two choices of $C$ grid.  We first used the small grid and noticed that the $\widehat{C}$ estimates were near the upper bound of the grid for many of the methods.  This motivated the use of a larger grid to see if the results were the same.
+
+# 
+
+## Small $C$ grid.
+
+Let $c$ be the maximum observed richness of a sample (maximum over the replciates).  In the small $C$ grid simulation we iterate our optimization over $C = \{c, 1.2*c, 1.4*c, \dots, 20*c\}$, or in other words we ignore the possibility that the coverage of our sample could be under 5\%.  This is the same grid we used in all simulations.  After running our algorithm with all methods we find
+
+```{r small_out}
+process_sample_list(lakes_results, 
+                    sample_names = 2009:2011,
+                    latex_format = F)
+
+```
+
+Given that the maximum observed richness in the samples is `r get_cc(lakes_results)` this caps our $C$ estimates at `r formatC(get_cc(lakes_results) * 20, format = "d")` respecitvely.  Therefore we have many estimates which are near the arbitrarily chosen upper bound of our $C$ grid.
+
+## Large $C$ grid
+
+In the large $C$ grid we iterate over $C = \{c, 1.5*c, 2*c, \dots, 50*c\}$. 
+
+# Common settings
+
+The following settings are consistent in both analyses:
+
+- The data is a series of three samples from the littoral region in the Summer: 2009, 2010 and 2011.  These have $r$ = 8,6,6 (replicates) respectively.
+- The $\lambda^{\text{grid}}$ is $\{0, 10, 20, \dots , 140\}$ which is the largest grid we used in any simulation.
+- Optimization starts for $\eta = (\alpha, \delta)$ include two fixed starts and one borrowed from the maximum likelihood solution in the previous $C$.
+
