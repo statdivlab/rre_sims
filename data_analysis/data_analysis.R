@@ -74,14 +74,3 @@ lakes_results_bigger_C_grid <- lapply(list_of_samples, run_methods,
                                       c_seq_len = 99)
 save(lakes_results_bigger_C_grid,
      file = "./data_analysis_results_big_C.RData")
-
-
-# apples_results <- breakaway::apples %>%
-#  list(.) %>%
-#  list(method_0 = rre::unregularized_mle(.),
-#        method_3 = rre::gof_criterion(., lambda_vec = lambda_grid))
-
-lakes_results %>% lapply(. (function(y) lapply(y, function(x) x$best )))
-
-lapply(list_of_samples, rre::get_cc_max)
-756*20
