@@ -495,10 +495,12 @@ As a result of these simulations, we conclude that none of the methods (includin
 \section{Data Analysis}
 \label{sec:data_analysis}
 
-\alex{Data analysis writeup is forthcoming.  For now, here are the results with the same C grid we used in simulations.   I will give more thought into the best way to display these.}
+To illustrate the performance of these methods on real data we will use samples collected in consecutive years from Lake Champlain (\citet{tromas_2017}).  We limit our samples to replicates from the summer months and the littoral zone of the lake  (near the shore).  There were 8 replicates meeting these criteria from 2009, 6 replicates from 2010 and 6 from 2011.  The maximum observed richness (most species observed in any replicate that year) was 560 in 2009, 572 in 2010 and 715 in 2011.
 
-\begin{table}[h]
-\tblcaption{Estimates using a series of three samples drawn in consecutive years from the lakes data.  Only replicates from the Summer months and the Littoral region of the lake are included in the samples.  $\widehat{C}_{[\text{method}]}$ is the $C$ estimate obtained using the methods defined in Section \ref{sec:tuning_proposals}, shown for each sample.  The number of replicates in each sample is given by $r$.
+The richness estimates from each method are displayed in Table \ref{tab:data_analysis}.  Our estimates from each method are at least 10 times as high as the observed richness, and in some cases they reach the maximum value in our grid search for $C$ (which is 20 times the observed richness).  These extreme estimates suggest that the Gamma-Poisson model which underlies all methods is a poor fit to these data.  In simulations penalization had the intended effect of lowering inflated estimates.  However, we always simulated under a Gamma-Poisson model in simulations.  Using wild data our methods still produce estimates which are suspiciously high.
+
+\begin{table}[t]
+\tblcaption{Estimates using a series of three samples from 2009, 2010 and 2011 in the lakes data.  $\widehat{C}_{[\text{method}]}$ is the $C$ estimate obtained using the methods defined in Section \ref{sec:tuning_proposals}, shown for each sample.  The number of replicates in each sample is given by $r$.
 \label{tab:data_analysis}}
 \centering
 \begin{tabular}{|r|r|r|r|}
@@ -516,14 +518,22 @@ $\widehat{C}_{[0]}$ & 11200 & 11440 & 14014 \\
 \end{tabular}
 \end{table}
 
-\noindent \alex{The reason for running an expanded C grid is that many of the estimates in this table are near the boundary of our grid (11,200, 11,440 and 14,300 respectively).  I'm not concerned that the estimates might be too large/bad, but I am concerned that this may be obscuring differences between the methods.}
+In Figure \ref{fig:data_analysis} we display the same results visually.  The methods which use partitioning (Methods 1, 2 and 4) consistently produce lower estimates than those which do not (Methods 0 and 3).  This trend was not found in simulations, where the highest estimates came from Method 2 and the lowest from Method 1.  This may suggest that partitioning methods have an advantage on real data which could have greater heterogeneity between replicates than data generated from simple parametric distributions.
+
+\begin{figure}[t]
+\caption{A visual display of the results from Table \ref{tab:data_analysis}, $\widehat{C}$ estimates from each method.  
+\label{fig:data_analysis}}
+\centering\makebox[\textwidth]{\includegraphics[width=\textwidth]{./images/data_analysis.pdf}}
+\end{figure}
+
+\noindent \alex{Next: Modify the discussion to harmonious with what you've written here.}
 
 
 
 \section{Discussion}
 \label{sec:discussion}
 
-In this paper we have proposed an extension of the penalization in \citet{wang_2005} to data with biological replicates and proposed several methods for tuning the penalization parameter.  This extends the existing body of literature on species richness by demonstrating that penalization is useful in analyzing replicate data.  Our goodness of fit tuning method (Method 3) has better performance than the unpenalized MLE in 8 of the 12 parameter combinations we analyzed.  In this section we note promising directions for future work.
+In this paper we have proposed an extension of the penalization in \citet{wang_2005} to data with biological replicates and proposed several methods for tuning the penalization parameter.  This extends the existing body of literature on species richness by demonstrating that penalization is useful in analyzing replicate data.  Our goodness of fit tuning method (Method 3) has better performance than the unpenalized MLE in 8 of the 12 parameter combinations we analyzed.  In this section we note promising directions for future work.{}
 
 Our results from Section \ref{sec:fixed_lambda} hint at a positive correlation between $r$ and the optimal choice of $\lambda$.  We hypothesized that this may be the case and considered other ways of extending the objective function given in Equation \ref{eq:objective}.  For instance, using $-h(J)\lambda \log p_{\eta}(0)$ where $h(J)$ is $|J|$ or $\sqrt{|J|}$ seemed like plausible extensions, whereas the definition we give uses $h(J) = 1$.  Our investigations revealed that the trend is unfortunately not this simple as $|J|$ becomes large.  A parsimonious extension which accounts for this observed trend would be a valuable modification to our work.
 

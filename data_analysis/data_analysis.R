@@ -1,6 +1,6 @@
 library(magrittr)
 library(rre)
-setwd("/Users/alex/Dropbox/blups/code/rre_sims/data_analysis/")
+setwd("/Users/alex/Dropbox/classGrad/IS_Wil/rre_sims/data_analysis/")
 
 lakes <- readr::read_tsv("./lakes_data.txt") %>% as.data.frame()
 lakes_metadata <- readr::read_tsv("./lakes_metadata.txt") %>% as.data.frame()
