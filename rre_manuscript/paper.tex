@@ -350,39 +350,53 @@ In our simulations we chose an equal split of the indices for each partition: $|
 
 \subsection{Method 2: Cross-validated likelihood}
 
-\amy{up to here with editing}
+% A frequently employed method that takes advantage of replicate data is cross-validation.  Cross-validation is commonly applied to evaluate the strength of a model in a dataset containing both features and outcomes \citep{statistical-machine-learning}. In this setting, the model is trained on one subset of the data and then evaluated using another.  However, in the species problem we never observe true outcomes: $C$ is only ever estimated, and never observed.  Methods 2 and 4 are motivated by the idea that subsets of the data should produce similar estimates,
+ % desire to do something similar to cross-validation, but we have to find a function which takes the place of mean prediction error in the absence of any true $C$ observations.
 
-A frequently employed method that takes advantage of replicate data is cross-validation.  Cross-validation is most commonly applied to evaluate the strength of a model in a dataset containing both features and outcomes.  The model is trained on one subset of the data and then evaluated using another.  However, in the species problem we never observe true outcomes, i.e. $C$ is always estimated using the frequency counts.  Methods 2 and 4 are motivated by the desire to do something similar to cross-validation, but we have to find a function which takes the place of mean prediction error in the absence of any true $C$ observations.
-
-In Method 2 we use one subset of the data to generate estimates.  Then we evaluate those estimates using the likelihood with the data from the other subset.  As before, we partition the data into two subsets $p$ times, calling them $T(l)$ for the training subset of the $l$-th partition, and $E(l)$ for the evaluation subset of the $l$-th partition.  $T(l), E(l)$ are created exactly as in Method 1, we only relabel them to indicate the change in purpose.  Then for each $\lambda \in \lambdagrid$, $l \in \{1, \dots , p\}$ let
+In Method 2 we propose to partition the data into two subsets, and evaluate the estimates based on the ``training'' subset using the likelihood based on the ``evaluation'' subset.
+  % use one subset of the data to estimate $C$ and $\eta$.  Then we evaluate those estimates using the likelihood with the data from the other subset.  As before, w
+We partition the data into two subsets $p$ times, calling them $T(l)$ for the training subset of the $l$-th partition, and $E(l)$ for the evaluation subset of the $l$-th partition. For each $\lambda \in \lambdagrid$, $l \in \{1, \dots , p\}$ let
 \begin{equation}
 \left(\widehat{C}_{\lambda}^{ \ T(l)}, \widehat{\eta}_{\lambda}^{ \ T(l)} \right) = \argmax_{C, \, \eta} \mathcal{O}_\lambda \left(C, \eta; T(l) \right) \label{eq:part_c_hats_method_2}
 \end{equation}
-so that we have an estimate using only the training subset for each $\lambda$ value and each partition.  A $\lambda$ value is selected by plugging those estimates into the unpenalized likelihood with $J = E(l)$.
+so that we have an estimate using only the training subset for each $\lambda$ value and each partition.  A $\lambda$ value is selected by plugging those estimates into the unpenalized likelihood with $J = E(l)$:
 \begin{align}
 \widetilde{\lambda}_{[2]} &= \argmax_\lambda \sum_{l=1}^p \mathcal{O}_0\left( \widehat{C}_{\lambda}^{ \ T(l)}, \widehat{\eta}_{\lambda}^{ \ T(l)} ; \  E(l) \right) \label{eq:selected_lambda_2} \\
 \widehat{C}_{[2]} &= \frac{1}{p} \sum_{l=1}^p \widehat{C}_{\widetilde{\lambda}_{[2]}}^{ \ T(l)}
 \end{align}
- In the evaluation step given in Equation \eqref{eq:selected_lambda_2} we must use the unpenalized likelihood, as opposed to the penalized version.  The penalty term is in fact always positive, and has the potential dominate the likelihood if a very large $\lambda$ exists in $\lambdagrid$. For example, suppose we used the penalized likelihood and $10^7 \in \lambdagrid$.  Then no matter what data was passed in, Method 2 would select $\widetilde{\lambda} = 10^7$, and $\widehat{C}_{[2]}$ would shrink to the observed richness as a consequence.
+
+ % In the evaluation step given in Equation \eqref{eq:selected_lambda_2} we use the unpenalized likelihood, as opposed to the penalized version.  The penalty term is in fact always positive, and has the potential dominate the likelihood if a very large $\lambda$ exists in $\lambdagrid$. For example, suppose we used the penalized likelihood and $10^7 \in \lambdagrid$.  Then no matter what data was passed in, Method 2 would select $\widetilde{\lambda} = 10^7$, and $\widehat{C}_{[2]}$ would shrink to the observed richness as a consequence.
 
 %
 %
 %
 \subsection{Method 3: Goodness of fit}
 
-We depart from our partitioning scheme to explore another desirable property of an estimator.  An ideal estimator would produce parameter estimates $\widehat{C}$, $\widehat{\eta}$ which fit well with the frequency counts in our sample.  Consider a single frequency count table.  Using Equation \eqref{eq:likelihood} we can find the expected frequency counts $f_k$ given $C$ and $\eta$,
+% We depart from our partitioning scheme to explore another desirable property of an estimator.
+Method 3 uses goodness of fit of the fitted frequency counts to select an optimal tuning parameter.
+% An ideal estimator would produce parameter estimates $\widehat{C}$, $\widehat{\eta}$ which fit well with the frequency counts in our sample.
+% Consider a single frequency count table.
+Given that $c \sim$ Binomial $\left(C, 1- p_{\eta}(0)\right)$ and $(f_1, f_2, \ldots)|c \sim$  Multinomial $\left(c,  \frac{(p_{\eta}(1), p_{\eta}(2), \ldots)}{1-p_{\eta}(0)}\right)$, we have that
+% Using Equation \eqref{eq:likelihood} we can find the expected frequency counts $f_k$ given $C$ and $\eta$,
 \begin{equation}
- \mathbb{E}\left(f_k\right) = \mathbb{E}\left(f_k|c \right) = \mathbb{E}\left( c \frac{p_{\eta}(k)}{1-p_{\eta}(0)} \right) = C\left(1-p_{\eta}(0) \right) \frac{p_{\eta}(k)}{1-p_{\eta}(0)} = Cp_{\eta}(k)
+ \mathbb{E}\left[f_k\right] = \mathbb{E}\left[\mathbb{E}\left[f_k|c \right]\right] = \mathbb{E}\left[ c \frac{p_{\eta}(k)}{1-p_{\eta}(0)} \right] = C\left(1-p_{\eta}(0) \right) \frac{p_{\eta}(k)}{1-p_{\eta}(0)} = Cp_{\eta}(k).
 \end{equation}
-Then given estimates $\widehat{C}$ and $\widehat{\eta}$ we use a plug-in estimate for the expected counts: $\widehat{f_k} = \widehat{C}p_{\widehat{\eta}}(k)$.  If we consider each $f_k$ a category, the usual $\chi^2$ goodness of fit statistic is
+Then, given estimates $\widehat{C}$ and $\widehat{\eta}$, we consider a plug-in estimate for the expected frequency counts: $\widehat{f_k} = \widehat{C}p_{\widehat{\eta}}(k)$.  The usual $\chi^2$ goodness of fit statistic is then
 \begin{align}
-&\sum_{k=1}^{\infty} \frac{\left(f_k - \widehat{f}_k \right)^2 }{\widehat{f}_k} \\
-&=\sum_{k=1}^{\infty} \frac{\left(f_k - \widehat{C}p_{\widehat{\eta}}(k) \right)^2 }{\widehat{C} p_{\widehat{\eta}(k)}}  \label{eq:chi_sq_compact} \\
-& = \sum_{k=1}^{k_{max}} \frac{\left(f_k - \widehat{C}p_{\widehat{\eta}}(k) \right)^2 }{\widehat{C} p_{\widehat{\eta}(k)}} \ + \ \ \widehat{C} \sum_{k = k_{max}+1}^{\infty} p_{\widehat{\eta}}(k) \label{eq:chi_sq_expanded}
+\sum_{k=1}^{\infty} \frac{\left(f_k - \widehat{f}_k \right)^2 }{\widehat{f}_k} %&=\sum_{k=1}^{\infty} \frac{\left(f_k - \widehat{C}p_{\widehat{\eta}}(k) \right)^2 }{\widehat{C} p_{\widehat{\eta}(k)}}  \label{eq:chi_sq_compact} \\
+= \sum_{k=1}^{k_{max}} \frac{\left(f_k - \widehat{C}p_{\widehat{\eta}}(k) \right)^2 }{\widehat{C} p_{\widehat{\eta}(k)}} \ + \ \ \widehat{C} \sum_{k = k_{max}+1}^{\infty} p_{\widehat{\eta}}(k) \label{eq:chi_sq_expanded}
 \end{align}
-Equation \eqref{eq:chi_sq_expanded} uses the fact that we have some $k_{max}$ in every frequency count table such that $f_k = 0$ for all $k > \kmax$.  Therefore the statistic is a convergent sum, because the infinite sum is the tail of a distribution multiplied by a finite number $\widehat{C}$.  Equation \eqref{eq:chi_sq_expanded} is useful in software implementation as we can make use of built-in CDF functions for the tail.  Nonetheless we use Equation \eqref{eq:chi_sq_compact} below in extending to replicates for more concise notation.
+where $\kmax$ is the largest $k$ such that $f_k > 0$.
+% Equation \eqref{eq:chi_sq_expanded} uses the fact that we have some $k_{max}$ in every frequency count table such that $f_k = 0$ for all $k > \kmax$.
+% Therefore the statistic is a convergent sum, because the infinite sum is the tail of a distribution multiplied by a finite number $\widehat{C}$.
+Equation \eqref{eq:chi_sq_expanded} is useful in software implementation as we can make use of built-in CDF functions for the tail.
+%Nonetheless we use Equation \eqref{eq:chi_sq_compact} below in extending to replicates for more concise notation.
 
-In method 3 we make use of this goodness of fit metric by first generating estimates using all replicates.  For each $\lambda \in \lambdagrid$ let
+\amy{up to here with editing}
+
+
+
+In Method 3 we make use of this goodness of fit metric by first generating estimates using all replicates.  For each $\lambda \in \lambdagrid$ let
 \begin{equation}
 \left(\widehat{C}_{\lambda}, \widehat{\eta}_{\lambda} \right) = \argmax_{C, \, \eta} \mathcal{O}_\lambda \left(C, \eta; \left\{1, \dots, r \right\} \right) \label{eq:c_hat_lambdas_method_3}
 \end{equation}
