@@ -1,7 +1,7 @@
 \begin{thebibliography}{99}
 
-\bibitem[Barger \emph{and others}(2010)Barger, Bunge  et~al.]{barger_2010}
-\textsc{Barger, Kathryn, Bunge, John  \emph{and others}}. (2010).
+\bibitem[Barger and Bunge(2010)Barger and Bunge]{barger_2010}
+\textsc{Barger, Kathryn and Bunge, John}. (2010).
 \newblock Objective bayesian estimation for the number of species.
 \newblock {\em Bayesian Analysis\/}~\textbf{5}(4), 765--785.
 
@@ -41,6 +41,18 @@
 \newblock A unified treatment of integer parameter models.
 \newblock {\em Journal of the American Statistical
   Association\/}~\textbf{82}(399), 758--764.
+
+\bibitem[Love \emph{and others}(2014)Love, Huber and Anders]{deseq2}
+\textsc{Love, Michael~I, Huber, Wolfgang and Anders, Simon}. (2014).
+\newblock Moderated estimation of fold change and dispersion for rna-seq data
+  with deseq2.
+\newblock {\em Genome biology\/}~\textbf{15}(12), 550.
+
+\bibitem[McMurdie and Holmes(2013)McMurdie and Holmes]{mcmurdie2013phyloseq}
+\textsc{McMurdie, Paul~J and Holmes, Susan}. (2013).
+\newblock phyloseq: an r package for reproducible interactive analysis and
+  graphics of microbiome census data.
+\newblock {\em PloS one\/}~\textbf{8}(4), e61217.
 
 \bibitem[Minot and Willis(2019)Minot and Willis]{Minot:2019hc}
 \textsc{Minot, Samuel~S and Willis, Amy~D}. (2019, March).
