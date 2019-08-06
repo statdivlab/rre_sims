@@ -1,11 +1,16 @@
-\documentclass[oupdraft]{bio}
-\usepackage{url}
-
+\documentclass[12pt]{article}
 \usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{natbib, bbm}
+\usepackage{url} % not crucial - just used below for the URL
+
+\usepackage{amsthm}
+\usepackage{lipsum}
+
 \usepackage{xparse}
 \usepackage{mathtools}
 \usepackage[table,dvipsnames]{xcolor}
-
 
 \usepackage{ifthen}
 \usepackage{pstricks}
@@ -18,61 +23,120 @@
 \newcommand{\lambdagrid}{\lambda^{\text{grid}}}
 
 
+\newtheoremstyle{break}
+  {\topsep}{\topsep}%
+  {\itshape}{}%
+  {\bfseries}{}%
+  {\newline}{}%
+\theoremstyle{break}
+\newtheorem{theorem}{Theorem}
+
+\newtheoremstyle{break}
+  {\topsep}{\topsep}%
+  {\itshape}{}%
+  {\bfseries}{}%
+  {\newline}{}%
+\theoremstyle{break}
+\newtheorem{prop}{Proposition}
 
 \newboolean{DEBUG}
 \setboolean{DEBUG}{true}
-
 \newrgbcolor{amycolor}{.7 .1 .1}
 \ifthenelse {\boolean{DEBUG}}
 {\newcommand{\amy}[1]{{\bf \amycolor{[\@Amy: #1]}}}}
 {\newcommand{\amy}[1]{}}
 
-\newrgbcolor{alexcolor}{.1 .7 .7}
-\ifthenelse {\boolean{DEBUG}}
-{\newcommand{\alex}[1]{{\bf \alexcolor{[\@Alex: #1]}}}}
-{\newcommand{\alex}[1]{}}
 
-\newrgbcolor{editcolor}{.1 .5 .7}
-\ifthenelse {\boolean{DEBUG}}
-{\newcommand{\edit}[1]{{\bf \editcolor{[\@edit: #1]}}}}
-{\newcommand{\edit}[1]{}}
+\RequirePackage[OT1]{fontenc}
+\RequirePackage{amsthm,amsmath, bbm, xspace, graphics, graphicx}
+%\RequirePackage{breqn}
+%\RequirePackage[colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
+
+\pdfminorversion=4
+% NOTE: To produce blinded version, replace "0" with "1" below.
+\newcommand{\blind}{1}
+
+% DON'T change margins - should be 1 inch all around.
+\addtolength{\oddsidemargin}{-.5in}%
+\addtolength{\evensidemargin}{-.5in}%
+\addtolength{\textwidth}{1in}%
+\addtolength{\textheight}{-.3in}%
+\addtolength{\topmargin}{-.8in}%
+
 
 \begin{document}
 
+%\bibliographystyle{natbib}
 
-% Title of paper
-\title{Tuning parameter selection for a penalized estimator of species richness}
+\def\spacingset#1{\renewcommand{\baselinestretch}%
+{#1}\small\normalsize} \spacingset{1}
 
-% List of authors, with corresponding author marked by asterisk
-\author{ALEX PAYNTER, AMY D WILLIS$^\ast$\\[4pt]
-% Author addresses
-\textit{Department of Biostatistics,
-University of Washington,
-Health Sciences Building, Box 357232,
-1705 NE Pacific St., Seattle, WA 98195}
-% \\[2pt]
-% % E-mail address for correspondence
-% {payntera@uw.edu, adwillis@uw.edu}
-}
 
-% Running headers of paper:
-\markboth%
-% First field is the short list of authors
-{A. Paynter and A.D. Willis}
-% Second field is the short title of the paper
-{Tuning parameter selection for species richness}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\maketitle
+\if1\blind
+{
+  \title{\bf Tuning parameter selection for a penalized estimator of species richness}
+  \author{Alex Paynter and Amy D Willis\\ \\
+  Department of Biostatistics, University of Washington,\\
+  Health Sciences Building, Box 357232,\\
+  1705 NE Pacific St., Seattle, WA 98195 \\ \\
+  adwillis@uw.edu}
 
-% Add a footnote for the corresponding author if one has been
-% identified in the author list
-\footnotetext{adwillis@uw.edu}
+  \maketitle
+} \fi
 
+\if0\blind
+{
+  \bigskip
+  \bigskip
+  \bigskip
+  \begin{center}
+    {\LARGE\bf Tuning parameter selection for a penalized estimator of species richness}
+\end{center}
+  \medskip
+} \fi
+
+\bigskip
 \begin{abstract}
-{Our goal is to estimate the true number of classes in a population, called the species richness.  We consider the case where multiple frequency count tables have been collected from a homogeneous population, and investigate a penalized maximum likelihood estimator under a negative binomial model.
-Because high probabilities of unobserved classes increase the variance of species richness estimates,
-our method penalizes the probability of a class being unobserved, since high probabilities of unobserved classes increase the variance of species richness estimates. Tuning the penalization parameter is challenging because the true species richness is never known, and so we propose and validate four novel methods for tuning the penalization parameter.  We illustrate and contrast the performance of the proposed methods by estimating the strain-level microbial diversity of Lake Champlain over 3 consecutive years.}
+  Our goal is to estimate the true number of classes in a population, called the species richness.  We consider the case where multiple frequency count tables have been collected from a homogeneous population, and investigate a penalized maximum likelihood estimator under a negative binomial model.
+  Because high probabilities of unobserved classes increase the variance of species richness estimates,
+  our method penalizes the probability of a class being unobserved. Tuning the penalization parameter is challenging because the true species richness is never known, and so we propose and validate four novel methods for tuning the penalization parameter.  We illustrate and contrast the performance of the proposed methods by estimating the strain-level microbial diversity of Lake Champlain over 3 consecutive years.
 \end{abstract}
+
+\noindent%
+{\it Keywords: diversity, biodiversity, microbiome, regularization, maximum likelihood}
+\vfill
+
+\newpage
+\spacingset{1.45} % DON'T change the spacing!
+
+
+% % List of authors, with corresponding author marked by asterisk
+% \author{ALEX PAYNTER, AMY D WILLIS$^\ast$\\[4pt]
+% % Author addresses
+% \textit{Department of Biostatistics,
+% University of Washington,
+% Health Sciences Building, Box 357232,
+% 1705 NE Pacific St., Seattle, WA 98195}
+% % \\[2pt]
+% % % E-mail address for correspondence
+% % {payntera@uw.edu, adwillis@uw.edu}
+% }
+%
+% % Running headers of paper:
+% \markboth%
+% % First field is the short list of authors
+% {A. Paynter and A.D. Willis}
+% % Second field is the short title of the paper
+% {Tuning parameter selection for species richness}
+%
+% \maketitle
+%
+% % Add a footnote for the corresponding author if one has been
+% % identified in the author list
+% \footnotetext{adwillis@uw.edu}
+
 
 % TODO(Amy)
 % - go through all references and confirm used correctly
@@ -85,13 +149,13 @@ $n$ individuals from the population can be sampled to find which classes they be
 
 In ecology, species richness is a quantitative measurement of ecosystem diversity.  We focus on the specific application of estimating microbial diversity, that is, the number of strains of bacteria present in a population (e.g., a lake microenvironment or in an individual's oral cavity).
 Microbial diversity is often linked with ecosystem health, such as in the vaginal microbiome (where high diversity is associated with infection \citep{Oakley:2008uo}) and in the gut microbiome (where high diversity is associated with healthy metabolism \citep{Morgan:2012bm,Minot:2019hc}).
-Microbial abundance data typically contain many species observed infrequently (\textit{rare species}) and some which are observed a large number of times (\textit{abundant species}).  In data with both many rare and many abundant species, richness estimation methods often have high variance \citep{wang_2005,willis_2015}, motivating our regularised approach to estimation.
+Microbial abundance data typically contain many species observed infrequently (\textit{rare species}) and some which are observed a large number of times (\textit{abundant species}).  In data with both many rare and many abundant species, richness estimation methods often have high variance \citep{wang_2005,willis_2015}, motivating our regularized approach to estimation.
 
 In this paper we consider the penalized maximum likelihood approach of \citet{wang_2005} and investigate the open problem of selecting the penalization parameter. Because the true species richness $C$ is never observed for any sample, common approaches to tuning parameter selection (e.g., cross-validation) cannot be employed. We propose using biological replicates to aid tuning. %, and so we extend the proposal of \citet{wang_2005} to the analysis of independent but homogeneous ecosystems.
 We find that replicate data is advantageous for tuning the required penalization parameter and provide a comparison of the performance of 4 proposed methods for tuning parameter selection.
 
 This paper is organized as follows: We review species richness estimation in Section \ref{sec:literature_review}.  In Section \ref{sec:fixed_lambda} we describe our extension to biological replicates, and in Section \ref{sec:efficacy_sims} we establish the utility of penalization via simulations. In Section \ref{sec:tuning_proposals} we propose several novel methods for tuning the penalization parameter, and in Section \ref{sec:tuning_simulations}
-we evaluate our proposals. \amy{Section \ref{sec:data_analysis} applies our methods to microbiome data on Lake Champlain...} Section \ref{sec:discussion} closes with an expanded discussion of our results and suggested directions for future work. Software implementing the methods is available in the \url{R} package \url{rre}, available at \url{github.com/statdivlab/rre}, and code to reproduce the simulation results is available at \url{github.com/statdivlab/rre_sims}.
+we evaluate our proposals. In Section \ref{sec:data_analysis} we apply our methods to estimate microbial diversity in Lake Champlain, and Section \ref{sec:discussion} closes with a discussion of our results and suggested directions for future work. Software implementing the methods is available in the \url{R} package \url{rre} (\textit{regularized richness estimation}), available at \url{github.com/statdivlab/rre}, and code to reproduce the simulation results is available at \url{github.com/statdivlab/rre_sims}.
 
 
 \section{Literature Review}
@@ -100,11 +164,11 @@ we evaluate our proposals. \amy{Section \ref{sec:data_analysis} applies our meth
 
 \subsection{Poisson mixture models}
 
-The classical model for estimating species abundance is a Poisson mixture model.  Under this model the number of times we observe an species $i$ is $X_i \sim \text{Poisson}(\Lambda)$ where $\Lambda$ is a random variable distributed according to some mixing distribution.
-Many mixing distributions have been proposed, including by  \cite{bulmer_1974,ord_1986,norris_1998} (see \cite{bunge_1993} for a comprehensive review). While our proposal may be easily generalized to other mixing distributions, in this paper we consider the Gamma  distribution for $\Lambda$, first considered by \citet{fisher_1943}.
+The classical model for estimating species abundance is a Poisson mixture model.  Under this model the number of times we observe species $i$ is $X_i \sim \text{Poisson}(\Lambda)$ where $\Lambda$ is a random variable distributed according to some mixing distribution.
+Many mixing distributions have been proposed, including by  \cite{bulmer_1974,ord_1986,norris_1998} (see \cite{bunge_1993} for a comprehensive review). While our proposal may be easily generalized to other mixing distributions, in this paper we consider the Gamma  distribution for $\Lambda$, first considered by \citet{greenwood_yule} and \citet{fisher_1943}.
+Note that we only observe $X_i | X_i > 0$, and therefore we are interested in estimating the parameters of a Poisson mixture model using \textit{zero-truncated} Poisson-mixed data.
 
-
-Let $f_k = \#\{i: X_i = k\}$ be the number of classes observed $k$ times, called the \textit{frequencies} or \textit{frequency counts}.  Then the set $\{f_k\}_{k \geq 1}$ is a \textit{frequency count table}, a common way to represent species abundance data. Because $C = f_0 + f_1 + f_2 + \dots = f_0 + c$, the species problem can be framed as predicting $f_0$ to obtain the species richness estimate $\hat{C} = \hat{f}_0 + c$.
+Let $f_k = \#\{i: X_i = k\}$ be the number of classes observed $k$ times, called the \textit{frequency counts}.  Then the set $\{f_k\}_{k \geq 1}$ is a \textit{frequency count table}, a common way to represent species abundance data. Because $C = f_0 + f_1 + f_2 + \dots = f_0 + c$, the species problem can be framed as predicting $f_0$ given $f_1, f_2, \ldots$ to obtain a species richness estimate $\hat{C} = \hat{f}_0 + c$.
 
 Let $\Lambda \sim \text{Gamma}(\alpha, \delta)$ with distribution function $f(\lambda) = \delta^\alpha \Gamma (\alpha)^{-1} \lambda^{\alpha - 1} e^{-\delta \lambda}$, and write $\eta = (\alpha, \delta)$.
 % Then the distribution of $X_i$ under a gamma-Poisson model can written as a negative-binomial distribution,
@@ -114,8 +178,7 @@ Let $\Lambda \sim \text{Gamma}(\alpha, \delta)$ with distribution function $f(\l
 % Note that we are interested in estimating the parameters of a negative binomial
 % a zero-truncated negative binomial
 %
-There exist both frequentist \citep{fisher_1943} and Bayesian \citep{efron_1976,barger_2010} approaches to parameter estimation under this model. We will focus on frequentist maximum likelihood in this paper.
-\amy{introduce Gamma later?}
+There exist both frequentist \citep{fisher_1943,chao_2002} and Bayesian \citep{efron_1976,barger_2010} approaches to parameter estimation under this model. We will focus on frequentist maximum likelihood in this paper.
 
 \subsection{Estimation and computation}
 
@@ -197,35 +260,37 @@ We define the \textit{penalized log likelihood} for multiple samples as
  =& \sum_{j \in J} \biggl[ \log C! - \log (C-c)! + (C-c) \log p_\eta(0)  \nonumber \\
  & \qquad  - \sum_{k \geq 1} \log{} f_{kj}! + \sum_{k \geq 1} f_{kj} \log p_\eta(k) \biggr] - \lambda \log p_\eta(0)    \label{eq:objective}
 \end{align}
-By fixing $\lambda = 0$ we obtain the \textit{unpenalized log likelihood} for all replicates $j \in J$.  We define $\widehat{C}_{\lambda}$ to be the penalized maximum likelihood estimate for based on tuning parameter $\lambda$, that is,
+By fixing $\lambda = 0$ we obtain the unpenalized log likelihood for the set $J$.  We define $\widehat{C}_{\lambda}$ to be the penalized maximum likelihood estimate of $C$ based on tuning parameter $\lambda$, that is,
 \begin{equation}
 \left(\widehat{C}_{\lambda},  \widehat{\eta}_{\lambda} \right) = \argmax_{C, \, \eta}  \mathcal{O}_{\lambda} \left(C, \eta ; \{1, \dots , r\} \right) \label{eq:ccc_hat_lambda}
 \end{equation}
 where $\widehat{\eta}_{\lambda}$ is a nuisance parameter.
 
-We use root-mean-square error as the primary criterion for evaluating the performance of estimators in simulations.  Let $n_{\text{sim}}$ be the number of simulations completed for one choice of $(C, \eta, r)$, and $\widehat{C}_{\lambda \langle s \rangle}$ be the solution of Equation \eqref{eq:ccc_hat_lambda} obtained in simulation number $s$ with  $\lambda$.  Then we define
-\begin{equation}
- \text{RMSE}\left( \widehat{C}_{\lambda} \right) = \sqrt{ \frac{1}{n_{\text{sim}}} \sum_{s=1}^{n_{\text{sim}}} \left( \widehat{C}_{\lambda \langle s \rangle} - C\right)^2 }
-\end{equation}
-
-To maximize the likelihood we will use the direct approach, rather than the profile and conditional approaches reviewed in Section \ref{sec:literature_review}.  While it may be faster to use the profile or conditional approach, our investigations revealed that the results are not always the same in finite samples.
-Since our objective is to evaluate approaches to tuning, we place priority on the accuracy of optimization over speed.
+To maximize the likelihood we will use the direct approach, rather than the profile and conditional approaches reviewed in Section \ref{sec:literature_review}.  While it may be faster to use the profile or conditional approach, the results are not always the same in finite samples.
+Since our objective is to evaluate approaches to tuning, we place priority on the accuracy of optimization over speed of optimization.
 
 To implement a direct optimization approach we search over candidate $C$ values in a grid.  A gradient-based search over $\eta$ values is used at each $C$ in the grid to find the maximum penalized likelihood  $(C, \eta)$.
 
-\section{Efficacy of Penalization}
+\section{Evaluating penalized species richness estimates}
 \label{sec:efficacy_sims}
 \subsection{Simulation setup}
 
 Before evaluating potential tuning parameter selection methods, we first establish that penalization can improve richness estimation.  \citet{wang_2005} established that it can improve estimates for $r = 1$, this needs to be verified for $r> 1$.
-We propose simulating data under the gamma-Poisson model and maximizing the objective function with a set of fixed $\lambda$ values.  If there exists some $\lambda > 0$ where RMSE($\widehat{C}_{\lambda}$) is less than RMSE($\widehat{C}_0)$, we conclude that penalization is effective for the given data generating mechanism.
 
-We simulated using $C = 1000$, and $r \in \{6, 10, 14\}$.  We found that $\eta = (\alpha, \delta) = (10^{-1}, 10^{-1})$  provided a good fit to the data of  \citet{walsh2014restricted}, and $\eta = (10^{-2}, 10^{-5})$ provided a good fit to the data of \citet{tromas_2017}.
+\amy{note that it's not a penalty, it's a bonus}
+
+We use square root mean square error (RMSE) as the primary criterion for evaluating the performance of estimators.  Let $n_{\text{sim}}$ be the number of simulations completed for one choice of $(C, \eta, r)$, and $\widehat{C}_{\lambda \langle s \rangle}$ be the solution of Equation \eqref{eq:ccc_hat_lambda} obtained in simulation number $s$ with  $\lambda$.  Then we define
+\begin{equation}
+ \text{RMSE}\left( \widehat{C}_{\lambda} \right) = \sqrt{ \frac{1}{n_{\text{sim}}} \sum_{s=1}^{n_{\text{sim}}} \left( \widehat{C}_{\lambda \langle s \rangle} - C\right)^2 }.
+\end{equation}
+In this simulation, if there exists some $\lambda > 0$ for which RMSE($\widehat{C}_{\lambda}$) is less than RMSE($\widehat{C}_0)$, we conclude that penalization is effective.
+
+We simulated using $C = 1000$, and $r \in \{6, 10, 14\}$.  We found that $\eta = (\alpha, \delta) = (10^{-1}, 10^{-1})$  provided a good fit to the data of  \citet{walsh2014restricted}, and $\eta = (10^{-2}, 10^{-5})$ provided a good fit to the data of \citet{tromas_2017} (see Section \ref{sec:data_analysis}).
 For completeness we also investigated nearby $\eta$ values: $\eta = \left( 10^{-1}, 10^{-3} \right)$ and $\eta = \left( 10^{-1}, 10^{-5}\right)$.
 % To select $\eta$, we investigated the unregularised
 %  two microbial datasets
 % so choosing appropriate simulation values of $\eta$ is crucial in targeting our approach to microbial data.   We used two microbial datasets as motivating examples.  \citet{walsh2014restricted} provide a dataset from soil in a Swiss apple orchard and we found $\eta = (\alpha, \delta) = (10^{-1}, 10^{-1})$ produced a frequency count table with a similar structure to their data.  The second example from \citet{tromas_2017} is a sample of cyanobacteria from Lake Champlain, and we found $\eta = (10^{-2}, 10^{-5})$ mimicked the structure of their data well.  We note that is possible that the gamma-Poisson model is not the best fit for these examples, but our goal is only to choose $\eta$ in an appropriate range.  Two nearby $\eta$ values are included, $\eta = \left( 10^{-1}, 10^{-3} \right)$ and $\eta = \left( 10^{-1}, 10^{-5}\right)$.  These add variety to our simulations in this section and context for our simulations in Section \ref{sec:tuning_simulation_2}.  Under each combination of $\eta$ and $r$ 100 simulations were completed.
-In Table \ref{tab:eta_intuition} we provide a few summary measures for frequency count tables generated under each choice of $\eta$.  This characterizes the $\eta$ values by the proportion of unobserved, rare or abundant species we would expect to see. We return to a discussion of the different data structures in Section \ref{sec:tuning_simulations}.
+In Table \ref{tab:eta_intuition} we provide  summary measures for frequency count tables generated under each choice of $\eta$.  This characterizes the $\eta$ values by the proportion of unobserved, rare or abundant species we would expect to see. We return to a discussion of the different data structures in Section \ref{sec:tuning_simulations}.
 For each combination of $\eta$ and $r$, we performed 100 simulations.
 We investigated the grid $\lambda \in \{0, 5, \dots , 120\}$, and found that this grid was sufficiently expansive to ensure that the RMSE-minimising $\lambda$ was not on the boundary of the grid
 (see Figures \ref{fig:fixed_lambda} and \ref{fig:fixed_lambda_2}).
@@ -238,7 +303,7 @@ We investigated the grid $\lambda \in \{0, 5, \dots , 120\}$, and found that thi
 % latex table generated in R 3.5.1 by xtable 1.8-2 package
 % Thu May 23 22:11:47 2019
 \begin{table}[t]
-\tblcaption{The expected proportion of unobserved ($k=0$), singleton ($k=1$), rare ($k=1,2,3$), and abundant  ($k \geq 10$) species for 4 choices of $\eta$.  We also give the expected frequency count of the most abundant species when $C = 1000$.
+\caption{The expected proportion of unobserved ($k=0$), singleton ($k=1$), rare ($k=1,2,3$), and abundant  ($k \geq 10$) species for 4 choices of $\eta$.  We also give the expected frequency count of the most abundant species when $C = 1000$.
 \label{tab:eta_intuition}}
 \centering
 \footnotesize
@@ -250,7 +315,7 @@ We investigated the grid $\lambda \in \{0, 5, \dots , 120\}$, and found that thi
   Proportion singletons ($p_{\eta}(1)$) & 0.072 & 0.009 & 0.050 & 0.032 \\
   Proportion rare ($\sum_{k=1}^3 p_{\eta}(k)$) & 0.130 & 0.016 & 0.097 & 0.061 \\
   Proportion abundant ($\sum_{k=10}^{\infty} p_{\eta}(k)$) & 0.028 & 0.083 & 0.340 & 0.583 \\
-Expected max abundance ($\mathbb{E}\left[k_{\text{max}}\right]$) & $4.1 \times 10^{1}$ & $2.0 \times 10^{5}$ & $4.0 \times 10^{3}$ & $3.9 \times 10^{5}$ \\
+Expected max abundance ($\mathbbm{E}\left[k_{\text{max}}\right]$) & $4.1 \times 10^{1}$ & $2.0 \times 10^{5}$ & $4.0 \times 10^{3}$ & $3.9 \times 10^{5}$ \\
    \hline
 \end{tabular}
 \normalsize
@@ -259,7 +324,7 @@ Expected max abundance ($\mathbb{E}\left[k_{\text{max}}\right]$) & $4.1 \times 1
 
 
 \begin{table}[h]
-\tblcaption{The penalized maximum likelihood estimate of $C$ has lower RMSE for all investigated choices of $\eta$ and $r$ under a Gamma-mixed Poisson model for species abundances based on 100 simulations for each choice of $\eta$ and $r$.
+\caption{The penalized maximum likelihood estimate of $C$ has lower RMSE for all investigated choices of $\eta$ and $r$ under a Gamma-mixed Poisson model for species abundances based on 100 simulations for each choice of $\eta$ and $r$.
 $\lambda_{\text{opt}}$ is the value of $\lambda$ which produced the lowest RMSE.
 $\widehat{C}_0$ is the $C$ estimate with $\lambda = 0$, and $\widehat{C}_{\lambda_{\text{opt}}}$ is the $C$ estimate using $\lambda = \lambda_{\text{opt}}$.
 \label{tab:fixed_lambda_results}}
@@ -286,10 +351,10 @@ $\left(10^{-1}, 10^{-1}\right)$ &  10 & 527.53 &  15 & 286.27 \\
 
 \subsection{Simulation results} \label{sec:first_sim}
 
-The results of the simulation are shown in Table \ref{tab:fixed_lambda_results}.  For every parameter choice a reduction in RMSE($\widehat{C}_{\lambda}$) is found for some $\lambda > 0$.  Depending on simulation parameters the reduction varied from 22\% to 70\% compared to RMSE($\widehat{C}_{0}$) for the best $\lambda$.  These results show that for a variety of $(\eta, r)$ choices, penalization improves species richness estimation.
+The results of the simulation are shown in Table \ref{tab:fixed_lambda_results}.  For every parameter choice a reduction in RMSE($\widehat{C}_{\lambda}$) was found for some $\lambda > 0$.  Depending on simulation parameters the reduction varied from 22\% to 70\% compared to RMSE($\widehat{C}_{0}$) for the best $\lambda$.  These results show that for a variety of $(\eta, r)$ choices, penalization improves species richness estimation.
 We also see that the optimal $\lambda$ value varies considerably over $(\eta, r)$, ranging from 10 to 70.  This suggests that there is not a universally appropriate $\lambda$ choice. Therefore, tuning $\lambda$ to the sample appears desirable. We note that the optimal choice of $\lambda$ is not consistent either for fixed $r$ and variable $\eta$, nor for fixed $\eta$ and variable $r$.
 
-In order to demonstrate the effect on $\widehat{C}_{\lambda}$ as we increase $\lambda$, we plot the results for two $\eta$ values in Figures \ref{fig:fixed_lambda} and \ref{fig:fixed_lambda_2}.  For small values of $\lambda$ we acquire lower variance in the estimates while incurring some negative bias, and the RMSE improves as a result.  Eventually the bias difference dominates and the RMSE increases as $\lambda \to \infty$.
+In order to demonstrate the effect on $\widehat{C}_{\lambda}$ as we increase $\lambda$, we plot the results for two $\eta$ values in Figures \ref{fig:fixed_lambda} and \ref{fig:fixed_lambda_2}.  For small values of $\lambda$ we acquire lower variance in the estimates while incurring some negative bias, and the RMSE improves as a result.  Eventually the bias term dominates and the RMSE increases as $\lambda \to \infty$.
 
 
 \begin{figure}[p]
@@ -312,7 +377,7 @@ In order to demonstrate the effect on $\widehat{C}_{\lambda}$ as we increase $\l
 \section{Methods for Tuning $\lambda$}
 \label{sec:tuning_proposals}
 
-We have established that penalization can improve richness estimates, but different abundance structures ($\eta$) require different penalization parameters ($\lambda$) to minimize RMSE.  Therefore a method which can tune the parameter based on a sample is warranted.  We propose several novel methods in this section.  Each is evaluated via simulation in Section \ref{sec:tuning_simulations}.
+We have established that penalization can improve richness estimates, but different abundance structures ($\eta$) require different values of $\lambda$ to minimize RMSE. We therefore develop methods to tune $\lambda$ based on a sample.  We propose several novel methods in this section.  Each is evaluated in Section \ref{sec:tuning_simulations}.
 
 \setcounter{subsection}{-1}
 \subsection{Method 0: MLE without penalization}
@@ -322,7 +387,7 @@ We compare all proposed methods to the unpenalized MLE using $J = \{1, \dots r \
 \begin{equation}
 \left(\widehat{C}_{[0]},  \widehat{\eta}_{[0]} \right) = \argmax_{C, \, \eta}  \mathcal{O}_{0}\left(C, \eta ; \{1, \dots , r\} \right) \label{eq:c_hat_0}
 \end{equation}
-This method is fast and simple, making it an ideal baseline for comparison
+This method is fast and simple, making it an ideal baseline for comparison.
 
 For all of the remaining methods (1-4) we generate estimates $\widehat{C}_\lambda$ over $\lambda \in \lambda^{\text{grid}}$, where $\lambdagrid$ is user-specified (e.g., $\lambdagrid = \{0, 5, 10, \dots 120\}$ in Section \ref{sec:first_sim}).  %The methods differ in how they subset the data to create these estimates, and in the steps they take to arrive at a final estimate $\widehat{C}_{\text{[method]}}$.
 
@@ -330,9 +395,9 @@ For all of the remaining methods (1-4) we generate estimates $\widehat{C}_\lambd
 %
 \subsection{Method 1: Minimum subset variance}
 
-Ideally, our estimator for $C$ will have low variance, that is, there should be low variance in estimates from different resamples from the population.
+Since large variance in $C$ is a major concern in species richness estimation, ideally an estimator will have low variance. If this is the case, there should be low variance in estimates from equally sized subsets of $J$.
 % Method 1 is motivated by the belief that if we resample from the same population, an ideal $C$ estimator should have low variance.
-Exploiting the fact that we have replicate data, we repeatedly partition the replicates into two subsets and calculate two estimates.  We then select the $\lambda$ which yields the lowest between-subset variance.  This partitioning is repeated $p$ times to average out the arbitrary choice of subsets.
+For Method 1, we exploit the fact that we have replicate data by repeatedly partitioning the replicates into two subsets and calculating two estimates.  We then select the $\lambda$ which yields the lowest between-subset variance.  This partitioning is repeated $p$ times to average out the arbitrary choice of subsets.
 
 
 Let $T_1(l)$ be the first subset of the $l^{\text{th}}$ partition and $T_2(l)$ be the second subset of the $l^{\text{th}}$ partition, for $l \in \{1, \dots , p\}$. That is, $T_i(l) \subseteq \{1, \dots , r\}$, $T_1(l) \cap T_2(l) = \emptyset$ and $T_1(l) \cup T_2(l) = \{1, \dots ,r\}$.
@@ -347,20 +412,20 @@ We now have a $\widehat{C}$ corresponding to each $\lambda \in \lambdagrid$ in e
 \widehat{C}_{[1]} &=  \frac{1}{p} \sum_{l=1}^p \left[ \frac{\widehat{C}_{\widetilde{\lambda}_{[1]}}^{ \ T_1(l)} + \widehat{C}_{\widetilde{\lambda}_{[1]}}^{ \ T_2(l)}}{2} \right]
 \end{align}
 
-In our simulations we chose an equal split of the indices for each partition: $|T_1(l)| = |T_2(l)|$.  The subsets of each partition are selected at random, so we could select the same subset split more than once.  We partition a total 10 times ($p = 10$).  For example, if $r = 4$ then $T_1(1) = \{1,4\}$ and $T_2(1) = \{2, 3\}$ would be a valid subset selection.  This holds in methods 2 and 4 as well, which also use partitioning.
+In our simulations we chose an equal split of the indices for each partition: $|T_1(l)| = |T_2(l)|$.  The subsets of each partition are selected at random, and we sample with replacement.  We partition a total 10 times ($p = 10$).  For example, if $r = 4$ then $T_1(1) = \{1,4\}$ and $T_2(1) = \{2, 3\}$ would be valid subsets.  This approach to partitioning is also used in Methods 2 and 4.
 
 \subsection{Method 2: Cross-validated likelihood}
 
 % A frequently employed method that takes advantage of replicate data is cross-validation.  Cross-validation is commonly applied to evaluate the strength of a model in a dataset containing both features and outcomes \citep{statistical-machine-learning}. In this setting, the model is trained on one subset of the data and then evaluated using another.  However, in the species problem we never observe true outcomes: $C$ is only ever estimated, and never observed.  Methods 2 and 4 are motivated by the idea that subsets of the data should produce similar estimates,
  % desire to do something similar to cross-validation, but we have to find a function which takes the place of mean prediction error in the absence of any true $C$ observations.
 
-In Method 2 we propose to repeatedly partition the data into two subsets, and evaluate the estimates based on the ``training'' subset using the likelihood based on the ``evaluation'' subset.
+In Method 2 we propose to repeatedly partition the data into subsets and evaluate the estimates based on the ``training'' subset using the likelihood based on the ``evaluation'' subset.
   % use one subset of the data to estimate $C$ and $\eta$.  Then we evaluate those estimates using the likelihood with the data from the other subset.  As before, w
 We partition the data into two subsets $p$ times, calling them $T(l)$ for the training subset of the $l$-th partition, and $E(l)$ for the evaluation subset of the $l$-th partition. For each $\lambda \in \lambdagrid$, $l \in \{1, \dots , p\}$ let
 \begin{equation}
-\left(\widehat{C}_{\lambda}^{ \ T(l)}, \widehat{\eta}_{\lambda}^{ \ T(l)} \right) = \argmax_{C, \, \eta} \mathcal{O}_\lambda \left(C, \eta; T(l) \right) \label{eq:part_c_hats_method_2}
+\left(\widehat{C}_{\lambda}^{ \ T(l)}, \widehat{\eta}_{\lambda}^{ \ T(l)} \right) = \argmax_{C, \, \eta} \mathcal{O}_\lambda \left(C, \eta; T(l) \right), \label{eq:part_c_hats_method_2}
 \end{equation}
-so that we have an estimate using only the training subset for each $\lambda$ value and each partition.  A $\lambda$ value is selected by plugging those estimates into the unpenalized likelihood with $J = E(l)$:
+that is, $\left(\widehat{C}_{\lambda}^{ \ T(l)}, \widehat{\eta}_{\lambda}^{ \ T(l)} \right)$ is the penalized maximum likelihood estimate evaluated on the \textit{training} subset.  The $\lambda$ value which maximises the unpenalized likelihood calculated using the \textit{evaluation} subset is selected, and the average species richness estimate at this $\lambda$ is the estimated richness from Method 2:
 \begin{align}
 \widetilde{\lambda}_{[2]} &= \argmax_\lambda \sum_{l=1}^p \mathcal{O}_0\left( \widehat{C}_{\lambda}^{ \ T(l)}, \widehat{\eta}_{\lambda}^{ \ T(l)} ; \  E(l) \right) \label{eq:selected_lambda_2} \\
 \widehat{C}_{[2]} &= \frac{1}{p} \sum_{l=1}^p \widehat{C}_{\widetilde{\lambda}_{[2]}}^{ \ T(l)}
@@ -378,11 +443,10 @@ Method 3 uses goodness of fit of the fitted frequency counts to select an optima
 % An ideal estimator would produce parameter estimates $\widehat{C}$, $\widehat{\eta}$ which fit well with the frequency counts in our sample.
 % Consider a single frequency count table.
 Given that $c \sim$ Binomial $\left(C, 1- p_{\eta}(0)\right)$ and $(f_1, f_2, \ldots)|c \sim$  Multinomial $\left(c,  \frac{(p_{\eta}(1), p_{\eta}(2), \ldots)}{1-p_{\eta}(0)}\right)$, we have that
-% Using Equation \eqref{eq:likelihood} we can find the expected frequency counts $f_k$ given $C$ and $\eta$,
 \begin{equation}
- \mathbb{E}\left[f_k\right] = \mathbb{E}\left[\mathbb{E}\left[f_k|c \right]\right] = \mathbb{E}\left[ c \frac{p_{\eta}(k)}{1-p_{\eta}(0)} \right] = C\left(1-p_{\eta}(0) \right) \frac{p_{\eta}(k)}{1-p_{\eta}(0)} = Cp_{\eta}(k).
+ \mathbbm{E}\left[f_k\right] = \mathbbm{E}\left[\mathbbm{E}\left[f_k|c \right]\right] = \mathbbm{E}\left[ c \frac{p_{\eta}(k)}{1-p_{\eta}(0)} \right] = C\left(1-p_{\eta}(0) \right) \frac{p_{\eta}(k)}{1-p_{\eta}(0)} = Cp_{\eta}(k).
 \end{equation}
-Then, given estimates $\widehat{C}$ and $\widehat{\eta}$, we consider a plug-in estimate for the expected frequency counts: $\widehat{f_k} = \widehat{C}p_{\widehat{\eta}}(k)$.  The usual $\chi^2$ goodness of fit statistic is then
+Therefore, given estimates $\widehat{C}$ and $\widehat{\eta}$, we consider a plug-in estimate for the expected frequency counts: $\widehat{f_k} = \widehat{C}p_{\widehat{\eta}}(k)$.  The usual $\chi^2$ goodness of fit statistic is then
 \begin{align}
 \sum_{k=1}^{\infty} \frac{\left(f_k - \widehat{f}_k \right)^2 }{\widehat{f}_k} %&=\sum_{k=1}^{\infty} \frac{\left(f_k - \widehat{C}p_{\widehat{\eta}}(k) \right)^2 }{\widehat{C} p_{\widehat{\eta}(k)}}  \label{eq:chi_sq_compact} \\
 &= \sum_{k=1}^{\kmax} \frac{\left(f_k - \widehat{C}p_{\widehat{\eta}}(k) \right)^2 }{\widehat{C} p_{\widehat{\eta}(k)}} \ + \ \widehat{C} \sum_{k = k_{max}+1}^{\infty} p_{\widehat{\eta}}(k)
@@ -398,11 +462,14 @@ Equation \eqref{eq:chi_sq_expanded} is useful in software implementation as we c
 
 In Method 3 we make use of this goodness of fit metric by first generating estimates using all replicates.  For each $\lambda \in \lambdagrid$ let
 \begin{equation}
-\left(\widehat{C}_{\lambda}, \widehat{\eta}_{\lambda} \right) = \argmax_{C, \, \eta} \mathcal{O}_\lambda \left(C, \eta; \left\{1, \dots, r \right\} \right) \label{eq:c_hat_lambdas_method_3}
+\left(\widehat{C}_{\lambda}, \widehat{\eta}_{\lambda} \right) = \argmax_{C, \, \eta} \mathcal{O}_\lambda \left(C, \eta; \left\{1, \dots, r \right\} \right). \label{eq:c_hat_lambdas_method_3}
 \end{equation}
-$\widehat{C}_{[3]}$ is determined by evaluating the goodness of fit metric shown above for each choice of $\lambda$.  $\widetilde{\lambda}_{[3]}$ is the $\lambda$ value which provides $\widehat{C}_{\lambda}$ estimates which fit the data best.
+$\widetilde{\lambda}_{[3]}$ is the $\lambda$ value with the best-fitting estimates of $C$ and $\eta$:
 \begin{align}
-\widetilde{\lambda}_{[3]} &= \argmin_{\lambda} \sum_{j=1}^r \sum_{k=1}^{\infty} \frac{ \left( f_{kj} - \widehat{C}_{\lambda} p_{\widehat{\eta}_{\lambda}}(k) \right)^2}{\widehat{C}_{\lambda}p_{\widehat{\eta}_{\lambda}}(k)} \label{eq:selected_lambda_3} \\
+\widetilde{\lambda}_{[3]} &= \argmin_{\lambda} \sum_{j=1}^r \sum_{k=1}^{\infty} \frac{ \left( f_{kj} - \widehat{C}_{\lambda} p_{\widehat{\eta}_{\lambda}}(k) \right)^2}{\widehat{C}_{\lambda}p_{\widehat{\eta}_{\lambda}}(k)} \label{eq:selected_lambda_3}
+\end{align}
+and $\widehat{C}_{[3]}$ is the estimated value of $C$ at this choice of $\lambda$:
+\begin{align}
 \widehat{C}_{[3]} &= \widehat{C}_{\widetilde{\lambda}_{[3]}}
 \end{align}
 % In Equation \eqref{eq:selected_lambda_3} note the estimated counts $\left( \widehat{C}_{\lambda} p_{\widehat{\eta}_{\lambda}}(k) \right)$ are the same over all replicates ($j$).  This follows because we do not have independent $C, \eta$ estimates from each replicate, but a shared estimate for the sample.
@@ -412,7 +479,7 @@ $\widehat{C}_{[3]}$ is determined by evaluating the goodness of fit metric shown
 %
 \subsection{Method 4: Cross-validated goodness of fit}
 
-In Method 4 we return to the partitioning scheme of Method 2.  Rather than using the likelihood in the evaluation step, we hypothesize that the goodness-of-fit metric may be a better choice.
+In Method 4 we return to the partitioning scheme of Method 2.  Rather than using the likelihood in the evaluation step, we hypothesize that the goodness of fit metric may be a better choice.
 We partition the data $p$ times into a training set $T(l)$ and a evaluations set $E(l)$.
 For all $\lambda \in \lambdagrid$ and $l \in \{1, \dots , p \}$, we generate estimates exactly as in Method 2:
 \begin{equation}
@@ -424,7 +491,7 @@ To select $\lambda$ we evaluate the goodness of fit metric using only the evalua
 \widehat{C}_{[4]} &= \frac{1}{p} \sum_{l=1}^p \widehat{C}_{\widetilde{\lambda}_{[4]}}^{T(l)}
 \end{align}
 
-Similar to Method 2, this method generates training set-based estimates $\widehat{C}^{T(l)}_{\lambda}$, however, it evaluates these estimates using goodness-of-fit rather than likelihood maximisation.
+Similar to Method 2, this method generates training set-based estimates $\widehat{C}^{T(l)}_{\lambda}$, however, it evaluates these estimates using goodness of fit rather than likelihood maximisation.
 Compared to Method 3, this method uses each replicate to either generate an estimate or evaluate the fit, while in Method 3 all the replicates are used in both steps.
 
 \section{Tuning Method Simulations}
@@ -456,14 +523,14 @@ In this simulation we let $C = 1000$, and simulate 100 times over all combinatio
 In Table \ref{tab:tuning_sim_1} we show the RMSE over all simulations for each method and each combination of $\eta$ and $r$.  Over all parameter choices, Method 3 performs at least as well as Method 0, with a RMSE which was between 0 and 23\% lower.  Method 3 is the only method which performs at least as well as Method 0 for all parameter choices.
 
 We note some differences between the performance of the methods for different $\eta.$ When $\eta = (10^{-2},10^{-5})$, both Methods 2 also outperforms Method 0 for $r \in \{6, 10, 14\}$, while Method 2 does not outperform Method 0 for any $r$ when $\eta = (10^{-1},10^{-1})$.  Method 4 outperforms Method 0 for $r \in \{6, 14\}$ when $\eta = (10^{-2},10^{-5})$, but never when $\eta = (10^{-1},10^{-1})$.
-We conjecture that the differing performance across $\eta$ is due to the differing rare species structures implied by the different $\eta$'s. For example $\eta = (10^{-2},10^{-5})$ has more abundant species and larger expected maximum abundance $\mathbb{E}(k_{\text{max}})$, but relatively few rare species (see Table \ref{tab:eta_intuition}).
+We conjecture that the differing performance across $\eta$ is due to the differing rare species structures implied by the different $\eta$'s. For example $\eta = (10^{-2},10^{-5})$ has more abundant species and larger expected maximum abundance $\mathbbm{E}(k_{\text{max}})$, but relatively few rare species (see Table \ref{tab:eta_intuition}).
 
-% Universally superior RMSE is the most desirable property for a method, but we can characterize the performance of the methods based on the simulation parameters as well.  For example, $\eta = (10^{-2},10^{-5})$ has more abundant species and larger expected maximum abundance $\mathbb{E}(k_{\text{max}})$, but relatively few rare species (see Table \ref{tab:eta_intuition}).  The RMSE for Method 2 under this $\eta$ is 14-24\% smaller than Method 0, and for Method 4 the RMSE is slightly better for 2 of the 3 $r$ values.  Conversely, $\eta = (10^{-1}, 10^{-1})$ has more rare species and fewer abundant species and it is only Method 3 which has consistently improved performance.
+% Universally superior RMSE is the most desirable property for a method, but we can characterize the performance of the methods based on the simulation parameters as well.  For example, $\eta = (10^{-2},10^{-5})$ has more abundant species and larger expected maximum abundance $\mathbbm{E}(k_{\text{max}})$, but relatively few rare species (see Table \ref{tab:eta_intuition}).  The RMSE for Method 2 under this $\eta$ is 14-24\% smaller than Method 0, and for Method 4 the RMSE is slightly better for 2 of the 3 $r$ values.  Conversely, $\eta = (10^{-1}, 10^{-1})$ has more rare species and fewer abundant species and it is only Method 3 which has consistently improved performance.
 
 [Method 1 has better performance only for $r = 6$ on both $\eta$ choices.  In general, we would expect that any truly effective method would improve relative to Method 0 as $r$ increases, as this means more data was collected.  The fact that Method 1 loses its edge over Method 0 as we collect more data is a discouraging finding.  Method 3 shows the opposite trend, which is especially clear in Figure \ref{fig:tuning_sim_1} on $\eta = (10^{-2},10^{-5})$.  As we increase $r$ the simulations appear closer to the truth in Method 3, and Method 3 has the best RMSE for $r = 14$ under both $\eta$ values.]
 
 \begin{table}[ht]
-\tblcaption{RMSE$(\widehat{C})$ for Methods 0-4 based on a zero-truncated gamma-mixed Poisson data generating process. $C = 1000$ is constant for all simulations.  Under each $\eta, r$ combination, 100 simulations were run.  Methods with RMSE better than Method 0 have a \textcolor{blue!50}{blue} background, and the best method for each $\eta, r$ combination is \textbf{bolded}.
+\caption{RMSE$(\widehat{C})$ for Methods 0-4 based on a zero-truncated gamma-mixed Poisson data generating process. $C = 1000$ is constant for all simulations.  Under each $\eta, r$ combination, 100 simulations were run.  Methods with RMSE better than Method 0 have a \textcolor{blue!50}{blue} background, and the best method for each $\eta, r$ combination is \textbf{bolded}.
 \label{tab:tuning_sim_1}}
 \centering
 \begin{tabular}{|l|c|c|c|c|c|c|}
@@ -501,7 +568,7 @@ Method 2 has the opposite behavior: the estimates tend to be too high, especiall
 Even for $\eta = (10^{-1}, 10^{-1})$, where the Method 0 bias is smaller, we see that Method 2 has poor performance (Table \ref{tab:tuning_sim_1}).  Recall that in each partition of Method 2 we use only half the data to generate the estimates $\widehat{C}^{T(l)}_{\lambda}$.  As a consequence Method 2 has slightly higher variance when compared with Method 0, as evidenced by the interquartile range in Figure \ref{fig:tuning_sim_1} for $\eta = (10^{-1}, 10^{-1})$.  In conclusion, Method 2 does not appear to be effectively
 tuning $\lambda$, and sample splitting to generate estimates may be leading to high variance.
 
-Methods 3 and 4, which are both based on goodness-of-fit criteria, display different patterns depending on the $\eta$ and $r$ values of the simulation.
+Methods 3 and 4, which are both based on goodness of fit criteria, display different patterns depending on the $\eta$ and $r$ values of the simulation.
 % This is a desirable property because we know the optimal $\lambda$ value depends on the structure of the data, and we want a method which can adapt.  In Methods 3 and 4 we generate estimates using the penalized likelihood and evaluate the fit with the goodness of fit metric.
 While we find the indications that Method 4 is adaptable to the dataset encouraging, under $\eta = (10^{-1}, 10^{-1})$ the RMSE for Method 4 is 15-75\% greater than for Method 0. In comparison, Method 3 is at least as good as Method 0 with respect to RMSE. In addition,  Method 3 is simpler and faster than Method 4.  Given deficits noted for Method 1 and 2, Method 3 is by far the most promising method based on this simulation.  We propose to conduct a secondary simulation to further challenge Method 3, testing whether it remains superior to Method 0 over a wider range of $\eta$ values.
 
@@ -517,7 +584,7 @@ While we find the indications that Method 4 is adaptable to the dataset encourag
 In this simulation we will fix $C = 1000$, $r \in \{6, 10, 14\}$ and perform 100 simulations for each combination of $\eta$ and $r$.  We let $\eta \in \{ (10^{-1}, 10^{-3}), (10^{-1}, 10^{-5}) \}$ and only consider methods 0 and 3.  To account for the fact that a larger $\lambda$ was optimal for these $\eta$ values (see Table \ref{tab:fixed_lambda_results}) we use $\lambdagrid = \{0,10,20, \dots 140 \}$.
 
 \begin{table}[t]
-\tblcaption{RMSE in $\widehat{C}_{[\text{method}]}$.  Simulation parameters are grouped by $\eta$ and $r$, with $C = 1000$ fixed throughout.  Under each $\eta, r$ combination 100 simulations were run.  If Method 3 has better performance than Method 0 is has a \textcolor{blue!50}{blue} background and it is \textbf{bolded}.  This is redundant but consistent with Table \ref{tab:tuning_sim_1}.
+\caption{RMSE in $\widehat{C}_{[\text{method}]}$.  Simulation parameters are grouped by $\eta$ and $r$, with $C = 1000$ fixed throughout.  Under each $\eta, r$ combination 100 simulations were run.  If Method 3 has better performance than Method 0 is has a \textcolor{blue!50}{blue} background and it is \textbf{bolded}.  This is redundant but consistent with Table \ref{tab:tuning_sim_1}.
 \label{tab:tuning_sim_2}}
 \centering
 \begin{tabular}{|l|c|c|c|c|c|c|}
@@ -554,14 +621,14 @@ As a result of these simulations, we conclude that no method (including Method 0
 \section{Data Analysis}
 \label{sec:data_analysis}
 
-To illustrate the performance of our methods on ecological data, we estimate strain-level microbial diversity in Lake Champlain, a large eutrophic lake in Canada.  We analyse data from \citet{tromas_2017}, considering samples from the littoral zone in the summer season of the same year as replicates. This gives us 8 replicates from 2009, 6 replicates from 2010 and 6 replicates from 2011.  %The maximum observed richness in any given sample was 560 in 2009, 572 in 2010 and 715 in 2011.
+To illustrate the performance of our methods on ecological data, we estimate strain-level microbial diversity in Lake Champlain, a large eutrophic lake in Canada.  We analyze data from \citet{tromas_2017}, considering samples from the littoral zone in the summer season of the same year as replicates. This gives us 8 replicates from 2009, 6 replicates from 2010 and 6 replicates from 2011.  %The maximum observed richness in any given sample was 560 in 2009, 572 in 2010 and 715 in 2011.
 
 
 % These extreme estimates suggest that the Gamma-Poisson model which underlies all methods is a poor fit to these data.
 % In simulations penalization had the intended effect of lowering inflated estimates.  However, we always simulated under a Gamma-Poisson model in simulations.  Using wild data our methods still produce estimates which are suspiciously high.
 
 % \begin{table}[t]
-% \tblcaption{Estimates using a series of three samples from 2009, 2010 and 2011 in the lakes data.  $\widehat{C}_{[\text{method}]}$ is the $C$ estimate obtained using the methods defined in Section \ref{sec:tuning_proposals}, shown for each sample.  The number of replicates in each sample is given by $r$.
+% \caption{Estimates using a series of three samples from 2009, 2010 and 2011 in the lakes data.  $\widehat{C}_{[\text{method}]}$ is the $C$ estimate obtained using the methods defined in Section \ref{sec:tuning_proposals}, shown for each sample.  The number of replicates in each sample is given by $r$.
 % \label{tab:data_analysis}}
 % \centering
 % \begin{tabular}{|r|r|r|r|}
@@ -612,7 +679,7 @@ We tested $h(J) = J$ and $h(J) = \sqrt{J}$, but found that the trend in optimal 
 
 The approach of \citet{wang_2005} is considerably more general than the gamma-Poisson model.  The gamma-Poisson model is common for modeling microbiome data \citep{deseq2,mcmurdie2013phyloseq}, and for this reason we focused on it in our investigation. However, our most promising method, Method 3, is also amenable to other modeling choices provided that there is some way to calculate the fitted counts $\widehat{f_k}$. We leave investigation of tuning parameter selection under different models to future work.
 
-For our investigations, we intentionally chose a likelihood optimization algorithm which was stable and exhaustive. However, refining the optimisation algorithm would be a valuable extension to our work. We also did not construct standard errors for our estimates, and the long computation times precluded the consideration of a bootstrapping approach.  A faster optimisation algorithm would facilitate a resample-based standard error procedure.
+For our investigations, we intentionally chose a likelihood optimization algorithm which was stable and exhaustive. However, refining the optimization algorithm would be a valuable extension to our work. We also did not construct standard errors for our estimates, and the long computation times precluded the consideration of a bootstrapping approach.  A faster optimization algorithm would facilitate a resample-based standard error procedure.
 
 % We have been careful to try to create methods which only depend on $\lambdagrid$ being large enough to contain the optimal value, with no change in results if it is too large.  This makes $\lambdagrid$ a more forgiving parameter than fixed $\lambda$ values, but we still need to make a choice to analyze data.  Faster computation times would aid in this problem because we could set a default grid which is generously large, thus alleviating concerns that our results are dependent on our choice.  Additionally, it may be possible to select $\lambdagrid$ for the methods adaptively.  For instance, we could expand the grid until the fixed estimates (e.g. $\widehat{C}_{\lambda}$ in Equation \eqref{eq:c_hat_lambdas_method_3}) have been suppressed to the observed richness.  Choosing $\lambdagrid$ remains a consideration when applying our methods.
 
