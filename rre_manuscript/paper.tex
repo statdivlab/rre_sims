@@ -681,11 +681,13 @@ Our estimates from each method are all at least 10 times as high as the observed
 \subsection{Estimating global human host-associated microbial richness}
 
 We also applied our method to estimate the species-level diversity of human host associated microbes.
-\cite{pasolli2019extensive} assembled $c=4,930$ species-level genome bins (SGBs) using publicly available shotgun metagenomic data, but we expect that many SGBs were not observed due to undersampling and challenges in genome assembly. The frequency counts of each SGB are available at \cite[Table S4]{pasolli2019extensive}.
+\cite{pasolli2019extensive} assembled $c=4,930$ species-level genome bins (SGBs) using publicly available shotgun metagenomic data, but we expect that many SGBs were not observed due to undersampling and challenges in genome assembly. The frequency counts of each SGB are available at \citet[Table S4]{pasolli2019extensive}.
 
-In this dataset $r=1$, and so it is not possible to sample split replicate frequency count tables. Therefore, only Methods 0 and Method 3 can be applied. With $\lambdagrid = \{0, 0.25, \ldots, 1100\}$ we found that Method 3 selected $\lambda = 913.5$. However, $\widehat{C}_{[3]} = 98600$
+In this dataset $r=1$, and so it is not possible to sample split replicate frequency count tables. Therefore, only Methods 0 and Method 3 can be applied. We found that $\widehat{C}_{[0]} = 420056$ with $(\hat{\alpha}, \hat{\delta}) = (0.00234, 0.00641).$ In contrast, $\widehat{C}_{[3]} = 163587$ with $\tilde{\lambda}_{[3]} = 905$ and $(\hat{\alpha}, \hat{\delta}) = (0.006045614, 0.006352191).$
+% With $\lambdagrid = \{0, 0.25, \ldots, 1100\}$ we found that Method 3 selected $\lambda = 913.5$. However, $\widehat{C}_{[3]} = 98600$
+% We found that $\widehat{C}_{[3]} = 163587$ with $\tilde{\lambda}_{[3]} = 905$ and $(\hat{\alpha}, \hat{\delta}) = (0.006045614, 0.006352191).$ % GOF = 11196564679
 
-We found that $\widehat{C}_{[0]} = 420056$ with $(\hat{\alpha}, \hat{\delta}) = (0.00234, 0.00641).$
+\amy{TODO: Discussion}
 
 
 \section{Discussion and Conclusion}
