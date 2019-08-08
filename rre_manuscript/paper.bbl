@@ -5,6 +5,11 @@
 \newblock Objective bayesian estimation for the number of species.
 \newblock {\em Bayesian Analysis\/}~\textbf{5}(4), 765--785.
 
+\bibitem[Bien(2016)Bien]{Bien:2016tg}
+\textsc{Bien, Jacob}. (2016).
+\newblock {The Simulator: An Engine to Streamline Simulations}.
+\newblock {\em arXiv preprint arXiv:1607.00021\/}.
+
 \bibitem[Bulmer(1974)Bulmer]{bulmer_1974}
 \textsc{Bulmer, MG}. (1974).
 \newblock On fitting the poisson lognormal distribution to species-abundance
@@ -107,6 +112,16 @@
   abundance.
 \newblock {\em Communications in Statistics-theory and
   Methods\/}~\textbf{15}(3), 853--871.
+
+\bibitem[Pasolli \emph{and others}(2019)Pasolli, Asnicar, Manara, Zolfo,
+  Karcher, Armanini, Beghini, Manghi, Tett, Ghensi
+  et~al.]{pasolli2019extensive}
+\textsc{Pasolli, Edoardo, Asnicar, Francesco, Manara, Serena, Zolfo, Moreno,
+  Karcher, Nicolai, Armanini, Federica, Beghini, Francesco, Manghi, Paolo,
+  Tett, Adrian, Ghensi, Paolo  \emph{and others}}. (2019).
+\newblock Extensive unexplored human microbiome diversity revealed by over
+  150,000 genomes from metagenomes spanning age, geography, and lifestyle.
+\newblock {\em Cell\/}~\textbf{176}(3), 649--662.
 
 \bibitem[{R Core Team}(2018){R Core Team}]{r_project}
 \textsc{{R Core Team}}. (2018).
