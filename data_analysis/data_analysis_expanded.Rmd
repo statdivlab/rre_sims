@@ -1,0 +1,322 @@
+---
+title: "Data Analysis Expanded"
+author: "Alex Paynter"
+date: "August 9, 2019"
+output: html_document
+---
+
+# Setup
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T, include = T, cache = T, message = F, results = 'hide')
+knitr::opts_knit$set(root.dir = here::here("data_analysis"))
+```
+
+```{r load_data}
+library(magrittr)
+library(rre)
+library(dplyr);
+#setwd("/Users/alex/Dropbox/classGrad/IS_Wil/rre_sims/data_analysis/")
+
+lakes <- readr::read_tsv("./lakes_data.txt") %>% as.data.frame()
+lakes_metadata <- readr::read_tsv("./lakes_metadata.txt") %>% as.data.frame()
+
+# goal is to grab a set of samples from the same year and site
+get_samples <- function(yr, zone, per = NULL, month = NULL) {
+  quo_period <- dplyr::enquo(per)
+  sample_list <- lakes_metadata %>%
+    dplyr::filter(Site == zone) %>%
+    dplyr::filter(Years == yr)
+  if (!is.null(per)) {
+    sample_list %<>%  dplyr::filter(Period == per) 
+  }
+  if (!is.null(month)) {
+    sample_list %<>%  dplyr::filter(Months == month) 
+  }
+  sample_list %<>% dplyr::select(SampleID) %>% unlist
+  tables <- lakes[,colnames(lakes) %in% sample_list] %>%
+    lapply(., rre::make_frequency_count_table)
+  return(tables)
+}
+
+#test <- rre::unregularized_mle(list_of_samples[[1]], 
+#                               multiplier = 2,
+#                               c_seq_len = 2)
+
+report_results_2 <- function(method_output) {
+  best <- method_output[["best"]]
+  c_hat <- best$ccc
+  m <- c_hat/(best$cc_max)
+  cat(paste0("C_hat: ", c_hat, "\n\n", round(m,2), " times greater than observed richness \n\nSelected lambda: ", best$selected_lambda, "\n\n"))
+}
+
+# Note that one of the metadata files matches no lakes sample ID:  12.07.11.1
+list_of_samples <- mapply(get_samples, seq(2009, 2011), "Littoral", "Summer")
+
+big_starts = data.frame(alpha = c(0.1, 0.01, 0.01, 0.001), 
+                        delta = c(0.1, 0.01, 0.0001, 0.001))
+```
+
+## Method 0
+
+```{r s1_m0_a}
+s1_m0_a <- rre::unregularized_mle(list_of_samples[[1]], 
+                                  multiplier = 200,
+                                  c_seq_len = 200,
+                                  starts = big_starts)
+```
+```{r s1_m0_a_print, results = 'asis'}
+s1_m0_a %>% report_results_2(.)
+```
+<br>
+<br>
+
+
+```{r s2_m0_a}
+s2_m0_a <- rre::unregularized_mle(list_of_samples[[2]], 
+                                  multiplier = 200,
+                                  c_seq_len = 200,
+                                  starts = big_starts)
+```
+```{r s2_m0_a_print, results = 'asis'}
+s2_m0_a %>% report_results_2(.)
+```
+<br>
+<br>
+
+```{r s3_m0_a}
+s3_m0_a <- rre::unregularized_mle(list_of_samples[[3]],
+                                  multiplier = 200,
+                                  c_seq_len = 200,
+                                  starts = big_starts)
+```
+```{r s3_m0_a_print, results = 'asis'}
+s3_m0_a %>% report_results_2(.)
+```
+<br>
+<br>
+
+<br><br>
+
+## Method 1
+
+### Sample 1
+
+```{r s1_m1_a}
+# big grids and few partitions to start:
+set.seed(12039)
+s1_m1_a <- rre::minimum_subset_distance(list_of_samples[[1]],
+                                        partitions = 5,
+                                        lambda_vec = seq(0,1000,by=200),
+                                        multiplier = 100,
+                                        c_seq_len = 20)
+```
+```{r s1_m1_a_print, results = 'asis'}
+s1_m1_a %>% report_results_2(.)
+```
+<br><br>
+
+<br><br>
+
+### Sample 2
+
+```{r s2_m1_a}
+# big grids and few partitions to start:
+set.seed(2345629)
+s2_m1_a <- rre::minimum_subset_distance(list_of_samples[[2]],
+                                        partitions = 5,
+                                        lambda_vec = seq(0,1000,by=200),
+                                        multiplier = 100,
+                                        c_seq_len = 50)
+```
+```{r s2_m1_a_print, results = 'asis'}
+s2_m1_a %>% report_results_2(.)
+```
+<br><br>
+
+<br><br>
+
+### Sample 3
+
+```{r s3_m1_a}
+# big grids and few partitions to start:
+set.seed(45698)
+s3_m1_a <- rre::minimum_subset_distance(list_of_samples[[3]],
+                                        partitions = 5,
+                                        lambda_vec = seq(0,1000,by=200),
+                                        multiplier = 100,
+                                        c_seq_len = 50)
+```
+```{r s3_m1_a_print, results = 'asis'}
+s3_m1_a %>% report_results_2(.)
+```
+<br><br>
+
+<br><br>
+
+## Method 3
+
+### Sample 1
+
+```{r s1_m3_a}
+s1_m3_a <- rre::gof_criterion(list_of_samples[[1]], 
+                              lambda_vec = seq(0,1000,by=100),
+                              multiplier = 200,
+                              c_seq_len = 10)
+```
+```{r s1_m3_a_print, results = 'asis'}
+s1_m3_a %>% report_results_2(.)
+```
+<br>
+<br>
+
+
+```{r s1_m3_b}
+# Zero in on lambda, use a more dense C grid:
+s1_m3_b <- rre::gof_criterion(list_of_samples[[1]], 
+                              lambda_vec = seq(300,500,by=10),
+                              multiplier = 200,
+                              c_seq_len = 20)
+```
+```{r s1_m3_b_print, results = 'asis'}
+s1_m3_b %>% report_results_2(.)
+```
+<br>
+<br>
+
+```{r s1_m3_c}
+s1_m3_c <- rre::gof_criterion(list_of_samples[[1]], 
+                              lambda_vec = seq(450,530,by=5),
+                              multiplier = 200,
+                              c_seq_len = 50,
+                              starts = big_starts)
+```
+```{r s1_m3_c_print, results = 'asis'}
+s1_m3_c %>% report_results_2(.)
+```
+<br>
+<br>
+
+```{r s1_m3_d}
+# Feed in more alpha and delta, narrow lambdagrid more.
+#s1_m3_d <- rre::gof_criterion(list_of_samples[[1]], 
+#                              lambda_vec = seq(505,525,by=2),
+#                              multiplier = 100,
+#                              c_seq_len = 50,
+#                              starts = data.frame(alpha = c(0.1, 0.01, 0.01, 0.001), delta = c(0.1, 0.01, 0.0001, 0.001)))
+```
+```{r s1_m3_d_print, results = 'asis'}
+#s1_m3_d %>% report_results_2(.)
+```
+<br>
+<br>
+
+<br><br>
+
+### Sample 2
+```{r s2_m3_a}
+s2_m3_a <- rre::gof_criterion(list_of_samples[[2]], 
+                              lambda_vec = seq(0,1000,by=100),
+                              multiplier = 200,
+                              c_seq_len = 10)
+```
+```{r s2_m3_a_print, results = 'asis'}
+s2_m3_a %>% report_results_2(.)
+```
+<br>
+<br>
+
+```{r s2_m3_b}
+# Zero in on lambda, use a more dense C grid:
+s2_m3_b <- rre::gof_criterion(list_of_samples[[2]], 
+                              lambda_vec = seq(0,200,by=10),
+                              multiplier = 200,
+                              c_seq_len = 20)
+```
+```{r s2_m3_b_print, results = 'asis'}
+s2_m3_b %>% report_results_2(.)
+```
+<br>
+<br>
+
+```{r s2_m3_c}
+# Zero in on lambda, use a more dense C grid:
+s2_m3_c <- rre::gof_criterion(list_of_samples[[2]], 
+                              lambda_vec = seq(120,200,by=5),
+                              multiplier = 200,
+                              c_seq_len = 50)
+```
+```{r s2_m3_c_print, results = 'asis'}
+s2_m3_c %>% report_results_2(.)
+```
+<br>
+<br>
+
+```{r s2_m3_d}
+# Selected lambda was on the edge of previous grid, lets try again:
+s2_m3_d <- rre::gof_criterion(list_of_samples[[2]], 
+                              lambda_vec = seq(150,300,by=10),
+                              multiplier = 100,
+                              c_seq_len = 50,
+                              starts = big_starts)
+```
+```{r s2_m3_d_print, results = 'asis'}
+s2_m3_d %>% report_results_2(.)
+```
+<br>
+<br>
+
+<br><br>
+
+### Sample 3
+```{r s3_m3_a}
+s3_m3_a <- rre::gof_criterion(list_of_samples[[3]], 
+                              lambda_vec = seq(0,1000,by=100),
+                              multiplier = 200,
+                              c_seq_len = 10)
+```
+```{r s3_m3_a_print, results = 'asis'}
+s3_m3_a %>% report_results_2(.)
+```
+<br>
+<br>
+
+```{r s3_m3_b}
+# Zero in on lambda, use a more dense C grid:
+s3_m3_b <- rre::gof_criterion(list_of_samples[[3]], 
+                              lambda_vec = seq(0,100,by=10),
+                              multiplier = 200,
+                              c_seq_len = 20)
+```
+```{r s3_m3_b_print, results = 'asis'}
+s3_m3_b %>% report_results_2(.)
+```
+<br>
+<br>
+
+
+```{r s3_m3_c}
+s3_m3_c <- rre::gof_criterion(list_of_samples[[3]], 
+                              lambda_vec = seq(50,130,by=10),
+                              multiplier = 200,
+                              c_seq_len = 50)
+```
+```{r s3_m3_c_print, results = 'asis'}
+s3_m3_c %>% report_results_2(.)
+```
+<br>
+<br>
+
+```{r s3_m3_d}
+# Selected lambda was on the edge of previous grid, lets try again:
+s3_m3_d <- rre::gof_criterion(list_of_samples[[3]], 
+                              lambda_vec = seq(100, 200, by=10),
+                              multiplier = 100,
+                              c_seq_len = 50,
+                              starts = big_starts)
+```
+```{r s3_m3_d_print, results = 'asis'}
+s3_m3_d %>% report_results_2(.)
+```
+
+<br><br>
