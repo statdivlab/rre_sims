@@ -9,3 +9,5 @@ rre_manuscript/paper.pdf
 *.synctex.gz
 *.log
 .Rproj.user
+.directory
+/data_analysis/.directory
