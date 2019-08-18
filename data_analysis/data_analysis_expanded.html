@@ -200,8 +200,7 @@ $(document).ready(function () {
 <h1>Setup</h1>
 <pre class="r"><code>library(magrittr)
 library(rre)
-library(dplyr);
-#setwd(&quot;/Users/alex/Dropbox/classGrad/IS_Wil/rre_sims/data_analysis/&quot;)
+library(dplyr)
 
 lakes &lt;- readr::read_tsv(&quot;./lakes_data.txt&quot;) %&gt;% as.data.frame()
 lakes_metadata &lt;- readr::read_tsv(&quot;./lakes_metadata.txt&quot;) %&gt;% as.data.frame()
@@ -224,15 +223,18 @@ get_samples &lt;- function(yr, zone, per = NULL, month = NULL) {
   return(tables)
 }
 
-#test &lt;- rre::unregularized_mle(list_of_samples[[1]], 
-#                               multiplier = 2,
-#                               c_seq_len = 2)
-
-report_results_2 &lt;- function(method_output) {
+report_results_2 &lt;- function(method_output, sample, report_eta = F) {
   best &lt;- method_output[[&quot;best&quot;]]
   c_hat &lt;- best$ccc
-  m &lt;- c_hat/(best$cc_max)
-  cat(paste0(&quot;C_hat: &quot;, c_hat, &quot;\n\n&quot;, round(m,2), &quot; times greater than observed richness \n\nSelected lambda: &quot;, best$selected_lambda, &quot;\n\n&quot;))
+  m &lt;- c_hat/(rre::get_cc_max(sample))
+  out_text &lt;- paste0(&quot;C_hat: &quot;, c_hat, &quot;\n\n&quot;, 
+             round(m,2), &quot; times greater than observed richness \n\nSelected lambda: &quot;, 
+             best$selected_lambda, &quot;\n\n&quot;)
+  if (report_eta) {
+    out_text &lt;- paste0(out_text, &quot;alpha = &quot;, best$alpha,
+                       &quot;, delta = &quot;, best$delta)
+  }
+  cat(out_text)
 }
 
 # Note that one of the metadata files matches no lakes sample ID:  12.07.11.1
@@ -242,35 +244,80 @@ big_starts = data.frame(alpha = c(0.1, 0.01, 0.01, 0.001),
                         delta = c(0.1, 0.01, 0.0001, 0.001))</code></pre>
 <div id="method-0" class="section level2">
 <h2>Method 0</h2>
+<div id="sample-1" class="section level3">
+<h3>Sample 1</h3>
 <pre class="r"><code>s1_m0_a &lt;- rre::unregularized_mle(list_of_samples[[1]], 
                                   multiplier = 200,
                                   c_seq_len = 200,
                                   starts = big_starts)</code></pre>
-<pre class="r"><code>s1_m0_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>report_results_2(s1_m0_a, list_of_samples[[1]], report_eta = T)</code></pre>
 <p>C_hat: 73360</p>
 <p>131 times greater than observed richness</p>
-<p>Selected lambda: NA <br> <br></p>
+<p>Selected lambda: NA</p>
+<p>alpha = 0.000881815796267289, delta = 0.00180159756103145 <br> <br></p>
+<pre class="r"><code># Use a very dense C grid, see if previous result is stable:
+s1_m0_b &lt;- rre::unregularized_mle(list_of_samples[[1]], 
+                                  multiplier = 200,
+                                  c_seq_len = 1000,
+                                  starts = data.frame(alpha = 0.0008818,
+                                           delta = 0.001802))</code></pre>
+<pre class="r"><code>report_results_2(s1_m0_b, list_of_samples[[1]], report_eta = T)</code></pre>
+<p>C_hat: 73404</p>
+<p>131.08 times greater than observed richness</p>
+<p>Selected lambda: NA</p>
+<p>alpha = 0.0008818, delta = 0.001802 <br> <br></p>
+</div>
+<div id="sample-2" class="section level3">
+<h3>Sample 2</h3>
 <pre class="r"><code>s2_m0_a &lt;- rre::unregularized_mle(list_of_samples[[2]], 
                                   multiplier = 200,
                                   c_seq_len = 200,
                                   starts = big_starts)</code></pre>
-<pre class="r"><code>s2_m0_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>report_results_2(s2_m0_a,  list_of_samples[[2]], report_eta = T)</code></pre>
 <p>C_hat: 48048</p>
 <p>84 times greater than observed richness</p>
-<p>Selected lambda: NA <br> <br></p>
+<p>Selected lambda: NA</p>
+<p>alpha = 0.00184635772378423, delta = 0.00253504224791231 <br> <br></p>
+<pre class="r"><code># Use a very dense C grid, see if previous result is stable:
+s2_m0_b &lt;- rre::unregularized_mle(list_of_samples[[2]], 
+                                  multiplier = 200,
+                                  c_seq_len = 1000,
+                                  starts = data.frame(alpha = 0.001846,
+                                                      delta = 0.002530))</code></pre>
+<pre class="r"><code>report_results_2(s2_m0_b,  list_of_samples[[2]], report_eta = T)</code></pre>
+<p>C_hat: 47631</p>
+<p>83.27 times greater than observed richness</p>
+<p>Selected lambda: NA</p>
+<p>alpha = 0.001846, delta = 0.00253 <br> <br></p>
+</div>
+<div id="sample-3" class="section level3">
+<h3>Sample 3</h3>
 <pre class="r"><code>s3_m0_a &lt;- rre::unregularized_mle(list_of_samples[[3]],
                                   multiplier = 200,
                                   c_seq_len = 200,
                                   starts = big_starts)</code></pre>
-<pre class="r"><code>s3_m0_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>report_results_2(s3_m0_a, list_of_samples[[3]], report_eta = T)</code></pre>
 <p>C_hat: 57915</p>
 <p>81 times greater than observed richness</p>
-<p>Selected lambda: NA <br> <br></p>
+<p>Selected lambda: NA</p>
+<p>alpha = 0.00160559546960213, delta = 0.00139050730439748 <br> <br></p>
+<pre class="r"><code># Use a very dense C grid, see if previous result is stable:
+s3_m0_b &lt;- rre::unregularized_mle(list_of_samples[[3]],
+                                  multiplier = 200,
+                                  c_seq_len = 1000,
+                                  starts = data.frame(alpha = 0.001606,
+                                                      delta = 0.001396))</code></pre>
+<pre class="r"><code>report_results_2(s3_m0_b, list_of_samples[[3]], report_eta = T)</code></pre>
+<p>C_hat: 57686</p>
+<p>80.68 times greater than observed richness</p>
+<p>Selected lambda: NA</p>
+<p>alpha = 0.001606, delta = 0.001396 <br> <br></p>
 <p><br><br></p>
+</div>
 </div>
 <div id="method-1" class="section level2">
 <h2>Method 1</h2>
-<div id="sample-1" class="section level3">
+<div id="sample-1-1" class="section level3">
 <h3>Sample 1</h3>
 <pre class="r"><code># big grids and few partitions to start:
 set.seed(12039)
@@ -279,13 +326,41 @@ s1_m1_a &lt;- rre::minimum_subset_distance(list_of_samples[[1]],
                                         lambda_vec = seq(0,1000,by=200),
                                         multiplier = 100,
                                         c_seq_len = 20)</code></pre>
-<pre class="r"><code>s1_m1_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s1_m1_a %&gt;% report_results_2(., list_of_samples[[1]], report_eta = T)</code></pre>
 <p>C_hat: 560</p>
-<p>times greater than observed richness</p>
-<p>Selected lambda: 600 <br><br></p>
+<p>1 times greater than observed richness</p>
+<p>Selected lambda: 600</p>
+<p>alpha = 0.287853225950553, delta = 0.00340474445652832 <br><br></p>
+<pre class="r"><code># more starts, lambda refinement, smaller multiplier:
+set.seed(12439)
+s1_m1_b &lt;- rre::minimum_subset_distance(list_of_samples[[1]],
+                                        partitions = 5,
+                                        lambda_vec = seq(400,800, by = 50),
+                                        multiplier = 20,
+                                        c_seq_len = 50, # mean to to do 50 here last time, and did not.
+                                        starts = big_starts)</code></pre>
+<pre class="r"><code>s1_m1_b %&gt;% report_results_2(.,  list_of_samples[[1]], report_eta = T)</code></pre>
+<p>C_hat: 560</p>
+<p>1 times greater than observed richness</p>
+<p>Selected lambda: 650</p>
+<p>alpha = 0.346342941210892, delta = 0.00367307344253345 <br><br></p>
+<pre class="r"><code># lambda refinement, see if the result is stable, full partitions:
+set.seed(12439)
+s1_m1_c &lt;- rre::minimum_subset_distance(list_of_samples[[1]],
+                                        partitions = 10,
+                                        lambda_vec = seq(650, 750, by = 5),
+                                        multiplier = 10,
+                                        c_seq_len = 100,
+                                        starts = data.frame(alpha = 0.3463,
+                                                            delta = 0.003673))</code></pre>
+<pre class="r"><code>s1_m1_c %&gt;% report_results_2(.,  list_of_samples[[1]], report_eta = T)</code></pre>
+<p>C_hat: 584</p>
+<p>1.04 times greater than observed richness</p>
+<p>Selected lambda: 700</p>
+<p>alpha = 0.288630187057372, delta = 0.00326079733294703 <br><br></p>
 <p><br><br></p>
 </div>
-<div id="sample-2" class="section level3">
+<div id="sample-2-1" class="section level3">
 <h3>Sample 2</h3>
 <pre class="r"><code># big grids and few partitions to start:
 set.seed(2345629)
@@ -294,13 +369,26 @@ s2_m1_a &lt;- rre::minimum_subset_distance(list_of_samples[[2]],
                                         lambda_vec = seq(0,1000,by=200),
                                         multiplier = 100,
                                         c_seq_len = 50)</code></pre>
-<pre class="r"><code>s2_m1_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s2_m1_a %&gt;% report_results_2(., list_of_samples[[2]])</code></pre>
 <p>C_hat: 572</p>
-<p>times greater than observed richness</p>
+<p>1 times greater than observed richness</p>
 <p>Selected lambda: 400 <br><br></p>
+<pre class="r"><code># more starts, lambda refinement, smaller multiplier:
+set.seed(239)
+s2_m1_b &lt;- rre::minimum_subset_distance(list_of_samples[[2]],
+                                        partitions = 5,
+                                        lambda_vec = seq(400,800,by = 50),
+                                        multiplier = 20,
+                                        c_seq_len = 50,
+                                        starts = big_starts)</code></pre>
+<pre class="r"><code>s2_m1_b %&gt;% report_results_2(., list_of_samples[[2]], report_eta = T)</code></pre>
+<p>C_hat: 572</p>
+<p>1 times greater than observed richness</p>
+<p>Selected lambda: 450</p>
+<p>alpha = 0.563369666971989, delta = 0.00675715681291475 <br><br></p>
 <p><br><br></p>
 </div>
-<div id="sample-3" class="section level3">
+<div id="sample-3-1" class="section level3">
 <h3>Sample 3</h3>
 <pre class="r"><code># big grids and few partitions to start:
 set.seed(45698)
@@ -309,16 +397,43 @@ s3_m1_a &lt;- rre::minimum_subset_distance(list_of_samples[[3]],
                                         lambda_vec = seq(0,1000,by=200),
                                         multiplier = 100,
                                         c_seq_len = 50)</code></pre>
-<pre class="r"><code>s3_m1_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s3_m1_a %&gt;% report_results_2(., list_of_samples[[3]])</code></pre>
 <p>C_hat: 715</p>
-<p>times greater than observed richness</p>
+<p>1 times greater than observed richness</p>
 <p>Selected lambda: 400 <br><br></p>
+<pre class="r"><code># more starts, lambda refinement, smaller multiplier:
+set.seed(45698)
+s3_m1_b &lt;- rre::minimum_subset_distance(list_of_samples[[3]],
+                                        partitions = 5,
+                                        lambda_vec = seq(200,600,by=50),
+                                        multiplier = 20,
+                                        c_seq_len = 50,
+                                        starts = big_starts)</code></pre>
+<pre class="r"><code>s3_m1_b %&gt;% report_results_2(., list_of_samples[[3]], report_eta = T)</code></pre>
+<p>C_hat: 715</p>
+<p>1 times greater than observed richness</p>
+<p>Selected lambda: 500</p>
+<p>alpha = 0.439184190636432, delta = 0.00363689044189535 <br><br></p>
+<pre class="r"><code># refine lambda, full partitions, see if the previous result is stable:
+set.seed(45698)
+s3_m1_c &lt;- rre::minimum_subset_distance(list_of_samples[[3]],
+                                        partitions = 10,
+                                        lambda_vec = seq(500, 600 ,by=5),
+                                        multiplier = 10,
+                                        c_seq_len = 100,
+                                        starts = data.frame(alpha = 0.4392,
+                                                            delta = 0.003637))</code></pre>
+<pre class="r"><code>s3_m1_c %&gt;% report_results_2(., list_of_samples[[3]], report_eta = T)</code></pre>
+<p>C_hat: 715</p>
+<p>1 times greater than observed richness</p>
+<p>Selected lambda: 600</p>
+<p>alpha = 0.514296454113112, delta = 0.00399721108167562 <br><br></p>
 <p><br><br></p>
 </div>
 </div>
 <div id="method-2" class="section level2">
 <h2>Method 2</h2>
-<div id="sample-1-1" class="section level3">
+<div id="sample-1-2" class="section level3">
 <h3>Sample 1</h3>
 <pre class="r"><code># big grids and few partitions to start:
 set.seed(12039)
@@ -328,51 +443,93 @@ s1_m2_a &lt;- rre::cv_replicates(list_of_samples[[1]],
                               lambda_vec = seq(0,1000,by=200),
                               multiplier = 200,
                               c_seq_len = 20)</code></pre>
-<pre class="r"><code>s1_m2_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s1_m2_a %&gt;% report_results_2(., list_of_samples[[1]])</code></pre>
 <p>C_hat: 32398</p>
-<p>times greater than observed richness</p>
+<p>57.85 times greater than observed richness</p>
+<p>Selected lambda: 200 <br><br></p>
+<pre class="r"><code># narrow lambda, more starts:
+set.seed(12039)
+s1_m2_b &lt;- rre::cv_replicates(list_of_samples[[1]],
+                              eval_function = &quot;neg_unreg_like&quot;,
+                              partitions = 5,
+                              lambda_vec = seq(0,300,by=20),
+                              multiplier = 200,
+                              c_seq_len = 20,
+                              starts = big_starts)</code></pre>
+<pre class="r"><code>s1_m2_b %&gt;% report_results_2(., list_of_samples[[1]], report_eta = T)</code></pre>
+<p>C_hat: 39436</p>
+<p>70.42 times greater than observed richness</p>
 <p>Selected lambda: 200</p>
-<p><br><br></p>
+<p>alpha = 0.00187925393515054, delta = 0.00220819664148153 <br><br></p>
 </div>
-<div id="sample-2-1" class="section level3">
+<div id="sample-2-2" class="section level3">
 <h3>Sample 2</h3>
 <pre class="r"><code># big grids and few partitions to start:
-set.seed(12023439)
+set.seed(120239)
 s2_m2_a &lt;- rre::cv_replicates(list_of_samples[[2]],
                               eval_function = &quot;neg_unreg_like&quot;,
                               partitions = 5,
                               lambda_vec = seq(0,1000,by=200),
                               multiplier = 200,
                               c_seq_len = 20)</code></pre>
-<pre class="r"><code>s2_m2_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s2_m2_a %&gt;% report_results_2(., list_of_samples[[2]])</code></pre>
 <p>C_hat: 46598</p>
-<p>times greater than observed richness</p>
-<p>Selected lambda: 0</p>
-<p><br><br></p>
+<p>81.47 times greater than observed richness</p>
+<p>Selected lambda: 0 <br><br></p>
+<pre class="r"><code># narrow lambda, more starts:
+set.seed(12039)
+s2_m2_b &lt;- rre::cv_replicates(list_of_samples[[2]],
+                              eval_function = &quot;neg_unreg_like&quot;,
+                              partitions = 5,
+                              lambda_vec = seq(0,300,by=20),
+                              multiplier = 200,
+                              c_seq_len = 20,
+                              starts = big_starts)</code></pre>
+<pre class="r"><code>s2_m2_b %&gt;% report_results_2(., list_of_samples[[2]], report_eta = T)</code></pre>
+<p>C_hat: 43708</p>
+<p>76.41 times greater than observed richness</p>
+<p>Selected lambda: 20</p>
+<p>alpha = 0.00219106668332468, delta = 0.00278972617132202 <br><br></p>
+</div>
+<div id="sample-3-2" class="section level3">
+<h3>Sample 3</h3>
 <pre class="r"><code># big grids and few partitions to start:
-set.seed(2342039)
+set.seed(223439)
 s3_m2_a &lt;- rre::cv_replicates(list_of_samples[[3]],
                               eval_function = &quot;neg_unreg_like&quot;,
                               partitions = 5,
                               lambda_vec = seq(0,1000,by=200),
                               multiplier = 200,
                               c_seq_len = 20)</code></pre>
-<pre class="r"><code>s3_m2_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s3_m2_a %&gt;% report_results_2(., list_of_samples[[3]])</code></pre>
 <p>C_hat: 72091</p>
-<p>times greater than observed richness</p>
-<p>Selected lambda: 0</p>
-<p><br><br> <br><br></p>
+<p>100.83 times greater than observed richness</p>
+<p>Selected lambda: 0 <br><br></p>
+<pre class="r"><code># narrow lambda, more starts:
+set.seed(23439)
+s3_m2_b &lt;- rre::cv_replicates(list_of_samples[[3]],
+                              eval_function = &quot;neg_unreg_like&quot;,
+                              partitions = 5,
+                              lambda_vec = seq(0,300,by=20),
+                              multiplier = 200,
+                              c_seq_len = 20,
+                              starts = big_starts)</code></pre>
+<pre class="r"><code>s3_m2_b %&gt;% report_results_2(., list_of_samples[[3]], report_eta = T)</code></pre>
+<p>C_hat: 52945</p>
+<p>74.05 times greater than observed richness</p>
+<p>Selected lambda: 40</p>
+<p>alpha = 0.00513847116036205, delta = 0.00213527532138352 <br><br> <br><br></p>
 </div>
 </div>
 <div id="method-3" class="section level2">
 <h2>Method 3</h2>
-<div id="sample-1-2" class="section level3">
+<div id="sample-1-3" class="section level3">
 <h3>Sample 1</h3>
 <pre class="r"><code>s1_m3_a &lt;- rre::gof_criterion(list_of_samples[[1]], 
                               lambda_vec = seq(0,1000,by=100),
                               multiplier = 200,
                               c_seq_len = 10)</code></pre>
-<pre class="r"><code>s1_m3_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s1_m3_a %&gt;% report_results_2(., list_of_samples[[1]])</code></pre>
 <p>C_hat: 37707</p>
 <p>67.33 times greater than observed richness</p>
 <p>Selected lambda: 400 <br> <br></p>
@@ -381,7 +538,7 @@ s1_m3_b &lt;- rre::gof_criterion(list_of_samples[[1]],
                               lambda_vec = seq(300,500,by=10),
                               multiplier = 200,
                               c_seq_len = 20)</code></pre>
-<pre class="r"><code>s1_m3_b %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s1_m3_b %&gt;% report_results_2(., list_of_samples[[1]])</code></pre>
 <p>C_hat: 24022</p>
 <p>42.9 times greater than observed richness</p>
 <p>Selected lambda: 490 <br> <br></p>
@@ -390,10 +547,11 @@ s1_m3_b &lt;- rre::gof_criterion(list_of_samples[[1]],
                               multiplier = 200,
                               c_seq_len = 50,
                               starts = big_starts)</code></pre>
-<pre class="r"><code>s1_m3_c %&gt;% report_results_2(.)</code></pre>
-<p>C_hat: 16480</p>
-<p>29.43 times greater than observed richness</p>
-<p>Selected lambda: 515 <br> <br></p>
+<pre class="r"><code>s1_m3_c %&gt;% report_results_2(., list_of_samples[[1]], report_eta = T)</code></pre>
+<p>C_hat: 36949</p>
+<p>65.98 times greater than observed richness</p>
+<p>Selected lambda: 485</p>
+<p>alpha = 0.00173751783966755, delta = 0.00174414924028724 <br> <br></p>
 <pre class="r"><code># Feed in more alpha and delta, narrow lambdagrid more.
 #s1_m3_d &lt;- rre::gof_criterion(list_of_samples[[1]], 
 #                              lambda_vec = seq(505,525,by=2),
@@ -404,13 +562,13 @@ s1_m3_b &lt;- rre::gof_criterion(list_of_samples[[1]],
 <p><br> <br></p>
 <p><br><br></p>
 </div>
-<div id="sample-2-2" class="section level3">
+<div id="sample-2-3" class="section level3">
 <h3>Sample 2</h3>
 <pre class="r"><code>s2_m3_a &lt;- rre::gof_criterion(list_of_samples[[2]], 
                               lambda_vec = seq(0,1000,by=100),
                               multiplier = 200,
                               c_seq_len = 10)</code></pre>
-<pre class="r"><code>s2_m3_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s2_m3_a %&gt;% report_results_2(., list_of_samples[[2]])</code></pre>
 <p>C_hat: 25868</p>
 <p>45.22 times greater than observed richness</p>
 <p>Selected lambda: 100 <br> <br></p>
@@ -419,7 +577,7 @@ s2_m3_b &lt;- rre::gof_criterion(list_of_samples[[2]],
                               lambda_vec = seq(0,200,by=10),
                               multiplier = 200,
                               c_seq_len = 20)</code></pre>
-<pre class="r"><code>s2_m3_b %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s2_m3_b %&gt;% report_results_2(., list_of_samples[[2]])</code></pre>
 <p>C_hat: 48500</p>
 <p>84.79 times greater than observed richness</p>
 <p>Selected lambda: 160 <br> <br></p>
@@ -428,7 +586,7 @@ s2_m3_c &lt;- rre::gof_criterion(list_of_samples[[2]],
                               lambda_vec = seq(120,200,by=5),
                               multiplier = 200,
                               c_seq_len = 50)</code></pre>
-<pre class="r"><code>s2_m3_c %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s2_m3_c %&gt;% report_results_2(., list_of_samples[[2]])</code></pre>
 <p>C_hat: 19157</p>
 <p>33.49 times greater than observed richness</p>
 <p>Selected lambda: 200 <br> <br></p>
@@ -438,19 +596,20 @@ s2_m3_d &lt;- rre::gof_criterion(list_of_samples[[2]],
                               multiplier = 100,
                               c_seq_len = 50,
                               starts = big_starts)</code></pre>
-<pre class="r"><code>s2_m3_d %&gt;% report_results_2(.)</code></pre>
-<p>C_hat: 13285</p>
-<p>23.23 times greater than observed richness</p>
-<p>Selected lambda: 220 <br> <br></p>
+<pre class="r"><code>s2_m3_d %&gt;% report_results_2(., list_of_samples[[2]], report_eta =T)</code></pre>
+<p>C_hat: 19063</p>
+<p>33.33 times greater than observed richness</p>
+<p>Selected lambda: 210</p>
+<p>alpha = 0.00465591220159688, delta = 0.00256678669891438 <br> <br></p>
 <p><br><br></p>
 </div>
-<div id="sample-3-1" class="section level3">
+<div id="sample-3-3" class="section level3">
 <h3>Sample 3</h3>
 <pre class="r"><code>s3_m3_a &lt;- rre::gof_criterion(list_of_samples[[3]], 
                               lambda_vec = seq(0,1000,by=100),
                               multiplier = 200,
                               c_seq_len = 10)</code></pre>
-<pre class="r"><code>s3_m3_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s3_m3_a %&gt;% report_results_2(., list_of_samples[[3]])</code></pre>
 <p>C_hat: 63953</p>
 <p>89.44 times greater than observed richness</p>
 <p>Selected lambda: 0 <br> <br></p>
@@ -459,7 +618,7 @@ s3_m3_b &lt;- rre::gof_criterion(list_of_samples[[3]],
                               lambda_vec = seq(0,100,by=10),
                               multiplier = 200,
                               c_seq_len = 20)</code></pre>
-<pre class="r"><code>s3_m3_b %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s3_m3_b %&gt;% report_results_2(., list_of_samples[[3]])</code></pre>
 <p>C_hat: 75602</p>
 <p>105.74 times greater than observed richness</p>
 <p>Selected lambda: 90 <br> <br></p>
@@ -467,7 +626,7 @@ s3_m3_b &lt;- rre::gof_criterion(list_of_samples[[3]],
                               lambda_vec = seq(50,130,by=10),
                               multiplier = 200,
                               c_seq_len = 50)</code></pre>
-<pre class="r"><code>s3_m3_c %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s3_m3_c %&gt;% report_results_2(., list_of_samples[[3]])</code></pre>
 <p>C_hat: 26849</p>
 <p>37.55 times greater than observed richness</p>
 <p>Selected lambda: 130 <br> <br></p>
@@ -477,16 +636,16 @@ s3_m3_d &lt;- rre::gof_criterion(list_of_samples[[3]],
                               multiplier = 100,
                               c_seq_len = 50,
                               starts = big_starts)</code></pre>
-<pre class="r"><code>s3_m3_d %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s3_m3_d %&gt;% report_results_2(., list_of_samples[[3]], report_eta = T)</code></pre>
 <p>C_hat: 65722</p>
 <p>91.92 times greater than observed richness</p>
 <p>Selected lambda: 180</p>
-<p><br><br></p>
+<p>alpha = 0.00141365893555893, delta = 0.0013674404514144 <br><br></p>
 </div>
 </div>
 <div id="method-4" class="section level2">
 <h2>Method 4</h2>
-<div id="sample-1-3" class="section level3">
+<div id="sample-1-4" class="section level3">
 <h3>Sample 1</h3>
 <pre class="r"><code># big grids and few partitions to start:
 set.seed(87124)
@@ -496,13 +655,26 @@ s1_m4_a &lt;- rre::cv_replicates(list_of_samples[[1]],
                               lambda_vec = seq(0,1000,by=200),
                               multiplier = 200,
                               c_seq_len = 20)</code></pre>
-<pre class="r"><code>s1_m4_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s1_m4_a %&gt;% report_results_2(., list_of_samples[[1]])</code></pre>
 <p>C_hat: 39705</p>
-<p>times greater than observed richness</p>
+<p>70.9 times greater than observed richness</p>
 <p>Selected lambda: 200</p>
 <p><br><br></p>
+<pre class="r"><code>set.seed(24)
+s1_m4_b &lt;- rre::cv_replicates(list_of_samples[[2]],
+                              eval_function = &quot;gof_chi_sq&quot;,
+                              partitions = 5,
+                              lambda_vec = seq(0,300,by=20),
+                              multiplier = 200,
+                              c_seq_len = 50,
+                              starts = big_starts)</code></pre>
+<pre class="r"><code>s1_m4_b %&gt;% report_results_2(., list_of_samples[[1]])</code></pre>
+<p>C_hat: 39997</p>
+<p>71.42 times greater than observed richness</p>
+<p>Selected lambda: 100</p>
+<p><br><br></p>
 </div>
-<div id="sample-2-3" class="section level3">
+<div id="sample-2-4" class="section level3">
 <h3>Sample 2</h3>
 <pre class="r"><code># big grids and few partitions to start:
 set.seed(23456)
@@ -512,10 +684,23 @@ s2_m4_a &lt;- rre::cv_replicates(list_of_samples[[2]],
                               lambda_vec = seq(0,1000,by=200),
                               multiplier = 200,
                               c_seq_len = 20)</code></pre>
-<pre class="r"><code>s2_m4_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s2_m4_a %&gt;% report_results_2(., list_of_samples[[2]])</code></pre>
 <p>C_hat: 59878</p>
-<p>times greater than observed richness</p>
+<p>104.68 times greater than observed richness</p>
 <p>Selected lambda: 0</p>
+<p><br><br></p>
+<pre class="r"><code>set.seed(2345)
+s2_m4_b &lt;- rre::cv_replicates(list_of_samples[[2]],
+                              eval_function = &quot;gof_chi_sq&quot;,
+                              partitions = 5,
+                              lambda_vec = seq(0,200,by=20),
+                              multiplier = 200,
+                              c_seq_len = 50,
+                              starts = big_starts)</code></pre>
+<pre class="r"><code>s2_m4_b%&gt;% report_results_2(., list_of_samples[[2]])</code></pre>
+<p>C_hat: 62277</p>
+<p>108.88 times greater than observed richness</p>
+<p>Selected lambda: 20</p>
 <p><br><br></p>
 <pre class="r"><code># big grids and few partitions to start:
 set.seed(7654)
@@ -525,10 +710,24 @@ s3_m4_a &lt;- rre::cv_replicates(list_of_samples[[3]],
                               lambda_vec = seq(0,1000,by=200),
                               multiplier = 200,
                               c_seq_len = 20)</code></pre>
-<pre class="r"><code>s3_m4_a %&gt;% report_results_2(.)</code></pre>
+<pre class="r"><code>s3_m4_a %&gt;% report_results_2(., list_of_samples[[3]])</code></pre>
 <p>C_hat: 49794</p>
-<p>times greater than observed richness</p>
+<p>69.64 times greater than observed richness</p>
 <p>Selected lambda: 0</p>
+<p><br><br></p>
+<pre class="r"><code># big grids and few partitions to start:
+set.seed(7654)
+s3_m4_b &lt;- rre::cv_replicates(list_of_samples[[3]],
+                              eval_function = &quot;gof_chi_sq&quot;,
+                              partitions = 5,
+                              lambda_vec = seq(0,200,by=20),
+                              multiplier = 200,
+                              c_seq_len = 50,
+                              starts = big_starts)</code></pre>
+<pre class="r"><code>s3_m4_b %&gt;% report_results_2(., list_of_samples[[3]])</code></pre>
+<p>C_hat: 39508</p>
+<p>55.26 times greater than observed richness</p>
+<p>Selected lambda: 60</p>
 <p><br><br> <br><br></p>
 </div>
 </div>
