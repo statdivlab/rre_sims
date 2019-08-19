@@ -358,6 +358,19 @@ s1_m1_c &lt;- rre::minimum_subset_distance(list_of_samples[[1]],
 <p>1.04 times greater than observed richness</p>
 <p>Selected lambda: 700</p>
 <p>alpha = 0.288630187057372, delta = 0.00326079733294703 <br><br></p>
+<pre class="r"><code>set.seed(2339)
+s1_m1_d &lt;- rre::minimum_subset_distance(list_of_samples[[1]],
+                                        partitions = 10,
+                                        lambda_vec = 700:740,
+                                        multiplier = 2,
+                                        c_seq_len = 11,
+                                        starts = data.frame(alpha = 0.28863,
+                                                            delta = 0.0032607))</code></pre>
+<pre class="r"><code>s1_m1_d %&gt;% report_results_2(.,  list_of_samples[[1]], report_eta = T)</code></pre>
+<p>C_hat: 593</p>
+<p>1.06 times greater than observed richness</p>
+<p>Selected lambda: 700</p>
+<p>alpha = 0.27719641954539, delta = 0.00341774256806582 <br><br></p>
 <p><br><br></p>
 </div>
 <div id="sample-2-1" class="section level3">
@@ -386,6 +399,19 @@ s2_m1_b &lt;- rre::minimum_subset_distance(list_of_samples[[2]],
 <p>1 times greater than observed richness</p>
 <p>Selected lambda: 450</p>
 <p>alpha = 0.563369666971989, delta = 0.00675715681291475 <br><br></p>
+<pre class="r"><code>set.seed(239234)
+s2_m1_c &lt;- rre::minimum_subset_distance(list_of_samples[[2]],
+                                        partitions = 10,
+                                        lambda_vec = seq(450,550,by=5),
+                                        multiplier = 2,
+                                        c_seq_len = 11,
+                                        starts = data.frame(alpha = 0.56337,
+                                                            delta = 0.0067572))</code></pre>
+<pre class="r"><code>s2_m1_c %&gt;% report_results_2(., list_of_samples[[2]], report_eta = T)</code></pre>
+<p>C_hat: 572</p>
+<p>1 times greater than observed richness</p>
+<p>Selected lambda: 500</p>
+<p>alpha = 0.626677883842663, delta = 0.00723954805338781 <br><br></p>
 <p><br><br></p>
 </div>
 <div id="sample-3-1" class="section level3">
@@ -428,6 +454,19 @@ s3_m1_c &lt;- rre::minimum_subset_distance(list_of_samples[[3]],
 <p>1 times greater than observed richness</p>
 <p>Selected lambda: 600</p>
 <p>alpha = 0.514296454113112, delta = 0.00399721108167562 <br><br></p>
+<pre class="r"><code>set.seed(452348)
+s3_m1_d &lt;- rre::minimum_subset_distance(list_of_samples[[3]],
+                                        partitions = 10,
+                                        lambda_vec = seq(500, 600 ,by=5),
+                                        multiplier = 2,
+                                        c_seq_len = 11,
+                                        starts = data.frame(alpha = 0.5143,
+                                                            delta = 0.003997))</code></pre>
+<pre class="r"><code>s3_m1_d %&gt;% report_results_2(., list_of_samples[[3]], report_eta = T)</code></pre>
+<p>C_hat: 718</p>
+<p>1 times greater than observed richness</p>
+<p>Selected lambda: 500</p>
+<p>alpha = 0.401117501137719, delta = 0.00355427260259968 <br><br></p>
 <p><br><br></p>
 </div>
 </div>
@@ -552,15 +591,14 @@ s1_m3_b &lt;- rre::gof_criterion(list_of_samples[[1]],
 <p>65.98 times greater than observed richness</p>
 <p>Selected lambda: 485</p>
 <p>alpha = 0.00173751783966755, delta = 0.00174414924028724 <br> <br></p>
-<pre class="r"><code># Feed in more alpha and delta, narrow lambdagrid more.
-#s1_m3_d &lt;- rre::gof_criterion(list_of_samples[[1]], 
-#                              lambda_vec = seq(505,525,by=2),
-#                              multiplier = 100,
-#                              c_seq_len = 50,
-#                              starts = data.frame(alpha = c(0.1, 0.01, 0.01, 0.001), delta = c(0.1, 0.01, 0.0001, 0.001)))</code></pre>
-<pre class="r"><code>#s1_m3_d %&gt;% report_results_2(.)</code></pre>
-<p><br> <br></p>
-<p><br><br></p>
+<pre class="r"><code>#s1_m3_d &lt;- rre::gof_criterion(list_of_samples[[1]], 
+#                              lambda_vec = seq(450,550,by=10),
+#                              multiplier = 200,
+#                              c_seq_len = 200,
+#                              starts = data.frame(alpha = 0.001738,
+#                                                  delta = 0.001744))</code></pre>
+<pre class="r"><code>#s1_m3_d %&gt;% report_results_2(., list_of_samples[[1]], report_eta = T)</code></pre>
+<p><br><br> <br><br></p>
 </div>
 <div id="sample-2-3" class="section level3">
 <h3>Sample 2</h3>
@@ -600,8 +638,16 @@ s2_m3_d &lt;- rre::gof_criterion(list_of_samples[[2]],
 <p>C_hat: 19063</p>
 <p>33.33 times greater than observed richness</p>
 <p>Selected lambda: 210</p>
-<p>alpha = 0.00465591220159688, delta = 0.00256678669891438 <br> <br></p>
-<p><br><br></p>
+<p>alpha = 0.00465591220159688, delta = 0.00256678669891438 <br><br></p>
+<pre class="r"><code># Selected lambda was on the edge of previous grid, lets try again:
+#s2_m3_e &lt;- rre::gof_criterion(list_of_samples[[2]], 
+#                              lambda_vec = seq(150,300,by=5),
+#                              multiplier = 100,
+#                              c_seq_len = 499,
+#                              starts = data.frame(alpha = 0.004656,
+#                                                  delta = 0.0025668))</code></pre>
+<pre class="r"><code>#s2_m3_e %&gt;% report_results_2(., list_of_samples[[2]], report_eta =T)</code></pre>
+<p><br><br> <br><br></p>
 </div>
 <div id="sample-3-3" class="section level3">
 <h3>Sample 3</h3>
@@ -641,6 +687,15 @@ s3_m3_d &lt;- rre::gof_criterion(list_of_samples[[3]],
 <p>91.92 times greater than observed richness</p>
 <p>Selected lambda: 180</p>
 <p>alpha = 0.00141365893555893, delta = 0.0013674404514144 <br><br></p>
+<pre class="r"><code># Selected lambda was on the edge of previous grid, lets try again:
+#s3_m3_e &lt;- rre::gof_criterion(list_of_samples[[3]], 
+#                              lambda_vec = seq(150, 250, by=5),
+#                              multiplier = 100,
+#                              c_seq_len = 499,
+#                              starts = data.frame(alpha = 0.0014137,
+ #                                                 delta = 0.001367))</code></pre>
+<pre class="r"><code>#s3_m3_e %&gt;% report_results_2(., list_of_samples[[3]], report_eta = T)</code></pre>
+<p><br><br><br><br></p>
 </div>
 </div>
 <div id="method-4" class="section level2">
@@ -730,6 +785,33 @@ s3_m4_b &lt;- rre::cv_replicates(list_of_samples[[3]],
 <p>Selected lambda: 60</p>
 <p><br><br> <br><br></p>
 </div>
+</div>
+<div id="output-data" class="section level2">
+<h2>Output data</h2>
+<p>For each method and sample we save the most refined or best estimate.</p>
+<pre class="r"><code>sample_1 &lt;- list(method_0 = s1_m0_b$best,
+                 method_1 = s1_m1_d$best,
+                 method_2 = s1_m2_b$best,
+                 method_3 = s1_m3_c$best,
+                 method_4 = s1_m4_b$best)
+
+sample_2 &lt;- list(method_0 = s2_m0_b$best,
+                 method_1 = s2_m1_c$best,
+                 method_2 = s2_m2_b$best,
+                 method_3 = s2_m3_d$best,
+                 method_4 = s2_m4_b$best)
+
+sample_3 &lt;- list(method_0 = s3_m0_b$best,
+                 method_1 = s3_m1_d$best,
+                 method_2 = s3_m2_b$best,
+                 method_3 = s3_m3_d$best,
+                 method_4 = s3_m4_b$best)
+
+sample_outputs &lt;- list(sample_1 = sample_1, 
+                       sample_2 = sample_2, 
+                       sample_3 = sample_3)
+
+save(sample_outputs, file = &quot;data_analysis_expanded_results.RData&quot;)</code></pre>
 </div>
 </div>
 

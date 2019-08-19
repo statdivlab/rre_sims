@@ -311,9 +311,9 @@ s3_m1_c %>% report_results_2(., list_of_samples[[3]], report_eta = T)
 ```
 <br><br>
 
-```{r s3_m1_c}
+```{r s3_m1_d}
 set.seed(452348)
-s3_m1_c <- rre::minimum_subset_distance(list_of_samples[[3]],
+s3_m1_d <- rre::minimum_subset_distance(list_of_samples[[3]],
                                         partitions = 10,
                                         lambda_vec = seq(500, 600 ,by=5),
                                         multiplier = 2,
@@ -321,8 +321,8 @@ s3_m1_c <- rre::minimum_subset_distance(list_of_samples[[3]],
                                         starts = data.frame(alpha = 0.5143,
                                                             delta = 0.003997))
 ```
-```{r s3_m1_c_print, results = 'asis'}
-s3_m1_c %>% report_results_2(., list_of_samples[[3]], report_eta = T)
+```{r s3_m1_d_print, results = 'asis'}
+s3_m1_d %>% report_results_2(., list_of_samples[[3]], report_eta = T)
 ```
 <br><br>
 
@@ -475,19 +475,17 @@ s1_m3_c %>% report_results_2(., list_of_samples[[1]], report_eta = T)
 <br>
 
 ```{r s1_m3_d}
-# Feed in more alpha and delta, narrow lambdagrid more.
 #s1_m3_d <- rre::gof_criterion(list_of_samples[[1]], 
-#                              lambda_vec = seq(505,525,by=2),
-#                              multiplier = 100,
-#                              c_seq_len = 50,
-#                              starts = data.frame(alpha = c(0.1, 0.01, 0.01, 0.001), delta = c(0.1, 0.01, 0.0001, 0.001)))
+#                              lambda_vec = seq(450,550,by=10),
+#                              multiplier = 200,
+#                              c_seq_len = 200,
+#                              starts = data.frame(alpha = 0.001738,
+#                                                  delta = 0.001744))
 ```
 ```{r s1_m3_d_print, results = 'asis'}
-#s1_m3_d %>% report_results_2(.)
+#s1_m3_d %>% report_results_2(., list_of_samples[[1]], report_eta = T)
 ```
-<br>
-<br>
-
+<br><br>
 <br><br>
 
 ### Sample 2
@@ -540,9 +538,21 @@ s2_m3_d <- rre::gof_criterion(list_of_samples[[2]],
 ```{r s2_m3_d_print, results = 'asis'}
 s2_m3_d %>% report_results_2(., list_of_samples[[2]], report_eta =T)
 ```
-<br>
-<br>
+<br><br>
 
+```{r s2_m3_e}
+# Selected lambda was on the edge of previous grid, lets try again:
+#s2_m3_e <- rre::gof_criterion(list_of_samples[[2]], 
+#                              lambda_vec = seq(150,300,by=5),
+#                              multiplier = 100,
+#                              c_seq_len = 499,
+#                              starts = data.frame(alpha = 0.004656,
+#                                                  delta = 0.0025668))
+```
+```{r s2_m3_e_print, results = 'asis'}
+#s2_m3_e %>% report_results_2(., list_of_samples[[2]], report_eta =T)
+```
+<br><br>
 <br><br>
 
 ### Sample 3
@@ -596,6 +606,22 @@ s3_m3_d <- rre::gof_criterion(list_of_samples[[3]],
 s3_m3_d %>% report_results_2(., list_of_samples[[3]], report_eta = T)
 ```
 <br><br>
+
+
+```{r s3_m3_e}
+# Selected lambda was on the edge of previous grid, lets try again:
+#s3_m3_e <- rre::gof_criterion(list_of_samples[[3]], 
+#                              lambda_vec = seq(150, 250, by=5),
+#                              multiplier = 100,
+#                              c_seq_len = 499,
+#                              starts = data.frame(alpha = 0.0014137,
+ #                                                 delta = 0.001367))
+```
+```{r s3_m3_e_print, results = 'asis'}
+#s3_m3_e %>% report_results_2(., list_of_samples[[3]], report_eta = T)
+```
+<br><br><br><br>
+
 
 ## Method 4
 
@@ -702,3 +728,33 @@ s3_m4_b %>% report_results_2(., list_of_samples[[3]])
 
 <br><br>
 <br><br>
+
+## Output data
+
+For each method and sample we save the most refined or best estimate.
+```{r output_data}
+sample_1 <- list(method_0 = s1_m0_b$best,
+                 method_1 = s1_m1_d$best,
+                 method_2 = s1_m2_b$best,
+                 method_3 = s1_m3_c$best,
+                 method_4 = s1_m4_b$best)
+
+sample_2 <- list(method_0 = s2_m0_b$best,
+                 method_1 = s2_m1_c$best,
+                 method_2 = s2_m2_b$best,
+                 method_3 = s2_m3_d$best,
+                 method_4 = s2_m4_b$best)
+
+sample_3 <- list(method_0 = s3_m0_b$best,
+                 method_1 = s3_m1_d$best,
+                 method_2 = s3_m2_b$best,
+                 method_3 = s3_m3_d$best,
+                 method_4 = s3_m4_b$best)
+
+sample_outputs <- list(sample_1 = sample_1, 
+                       sample_2 = sample_2, 
+                       sample_3 = sample_3)
+
+save(sample_outputs, file = "data_analysis_expanded_results.RData")
+
+```
