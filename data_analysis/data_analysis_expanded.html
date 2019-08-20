@@ -732,10 +732,11 @@ s1_m4_b &lt;- rre::cv_replicates(list_of_samples[[2]],
                               multiplier = 200,
                               c_seq_len = 50,
                               starts = big_starts)</code></pre>
-<pre class="r"><code>s1_m4_b %&gt;% report_results_2(., list_of_samples[[1]])</code></pre>
+<pre class="r"><code>s1_m4_b %&gt;% report_results_2(., list_of_samples[[1]], report_eta = T)</code></pre>
 <p>C_hat: 39997</p>
 <p>71.42 times greater than observed richness</p>
 <p>Selected lambda: 100</p>
+<p>alpha = 0.00577937580902826, delta = 0.00253025950819303</p>
 <p><br><br></p>
 </div>
 <div id="sample-2-4" class="section level3">
@@ -761,11 +762,15 @@ s2_m4_b &lt;- rre::cv_replicates(list_of_samples[[2]],
                               multiplier = 200,
                               c_seq_len = 50,
                               starts = big_starts)</code></pre>
-<pre class="r"><code>s2_m4_b%&gt;% report_results_2(., list_of_samples[[2]])</code></pre>
+<pre class="r"><code>s2_m4_b%&gt;% report_results_2(., list_of_samples[[2]], report_eta = T)</code></pre>
 <p>C_hat: 62277</p>
 <p>108.88 times greater than observed richness</p>
 <p>Selected lambda: 20</p>
+<p>alpha = 0.00169349063369582, delta = 0.00272093919686402</p>
 <p><br><br></p>
+</div>
+<div id="sample-3-4" class="section level3">
+<h3>Sample 3</h3>
 <pre class="r"><code># big grids and few partitions to start:
 set.seed(7654)
 s3_m4_a &lt;- rre::cv_replicates(list_of_samples[[3]],
@@ -788,10 +793,11 @@ s3_m4_b &lt;- rre::cv_replicates(list_of_samples[[3]],
                               multiplier = 200,
                               c_seq_len = 50,
                               starts = big_starts)</code></pre>
-<pre class="r"><code>s3_m4_b %&gt;% report_results_2(., list_of_samples[[3]])</code></pre>
+<pre class="r"><code>s3_m4_b %&gt;% report_results_2(., list_of_samples[[3]], report_eta = T)</code></pre>
 <p>C_hat: 39508</p>
 <p>55.26 times greater than observed richness</p>
 <p>Selected lambda: 60</p>
+<p>alpha = 0.00245049156517659, delta = 0.00177334454246655</p>
 <p><br><br> <br><br></p>
 </div>
 </div>
