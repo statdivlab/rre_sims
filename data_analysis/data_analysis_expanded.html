@@ -591,14 +591,17 @@ s1_m3_b &lt;- rre::gof_criterion(list_of_samples[[1]],
 <p>65.98 times greater than observed richness</p>
 <p>Selected lambda: 485</p>
 <p>alpha = 0.00173751783966755, delta = 0.00174414924028724 <br> <br></p>
-<pre class="r"><code>#s1_m3_d &lt;- rre::gof_criterion(list_of_samples[[1]], 
-#                              lambda_vec = seq(450,550,by=10),
-#                              multiplier = 200,
-#                              c_seq_len = 200,
-#                              starts = data.frame(alpha = 0.001738,
-#                                                  delta = 0.001744))</code></pre>
-<pre class="r"><code>#s1_m3_d %&gt;% report_results_2(., list_of_samples[[1]], report_eta = T)</code></pre>
-<p><br><br> <br><br></p>
+<pre class="r"><code>s1_m3_d &lt;- rre::gof_criterion(list_of_samples[[1]],
+                             lambda_vec = seq(500,650,by=10),
+                             multiplier = 200,
+                             c_seq_len = 200,
+                             starts = data.frame(alpha = 0.001738,
+                                                 delta = 0.001744))</code></pre>
+<pre class="r"><code>s1_m3_d %&gt;% report_results_2(., list_of_samples[[1]], report_eta = T)</code></pre>
+<p>C_hat: 20160</p>
+<p>36 times greater than observed richness</p>
+<p>Selected lambda: 550</p>
+<p>alpha = 0.00323103507112884, delta = 0.00174399997396298 <br><br> <br><br></p>
 </div>
 <div id="sample-2-3" class="section level3">
 <h3>Sample 2</h3>
@@ -640,14 +643,17 @@ s2_m3_d &lt;- rre::gof_criterion(list_of_samples[[2]],
 <p>Selected lambda: 210</p>
 <p>alpha = 0.00465591220159688, delta = 0.00256678669891438 <br><br></p>
 <pre class="r"><code># Selected lambda was on the edge of previous grid, lets try again:
-#s2_m3_e &lt;- rre::gof_criterion(list_of_samples[[2]], 
-#                              lambda_vec = seq(150,300,by=5),
-#                              multiplier = 100,
-#                              c_seq_len = 499,
-#                              starts = data.frame(alpha = 0.004656,
-#                                                  delta = 0.0025668))</code></pre>
-<pre class="r"><code>#s2_m3_e %&gt;% report_results_2(., list_of_samples[[2]], report_eta =T)</code></pre>
-<p><br><br> <br><br></p>
+s2_m3_e &lt;- rre::gof_criterion(list_of_samples[[2]],
+                             lambda_vec = seq(150,300,by=10),
+                             multiplier = 100,
+                             c_seq_len = 100,
+                             starts = data.frame(alpha = 0.004656,
+                                                 delta = 0.0025668))</code></pre>
+<pre class="r"><code>s2_m3_e %&gt;% report_results_2(., list_of_samples[[2]], report_eta =T)</code></pre>
+<p>C_hat: 13156</p>
+<p>23 times greater than observed richness</p>
+<p>Selected lambda: 220</p>
+<p>alpha = 0.00684619551612581, delta = 0.00257522387914928 <br><br> <br><br></p>
 </div>
 <div id="sample-3-3" class="section level3">
 <h3>Sample 3</h3>
@@ -688,14 +694,17 @@ s3_m3_d &lt;- rre::gof_criterion(list_of_samples[[3]],
 <p>Selected lambda: 180</p>
 <p>alpha = 0.00141365893555893, delta = 0.0013674404514144 <br><br></p>
 <pre class="r"><code># Selected lambda was on the edge of previous grid, lets try again:
-#s3_m3_e &lt;- rre::gof_criterion(list_of_samples[[3]], 
-#                              lambda_vec = seq(150, 250, by=5),
-#                              multiplier = 100,
-#                              c_seq_len = 499,
-#                              starts = data.frame(alpha = 0.0014137,
- #                                                 delta = 0.001367))</code></pre>
-<pre class="r"><code>#s3_m3_e %&gt;% report_results_2(., list_of_samples[[3]], report_eta = T)</code></pre>
-<p><br><br><br><br></p>
+s3_m3_e &lt;- rre::gof_criterion(list_of_samples[[3]],
+                             lambda_vec = seq(150, 250, by=10),
+                             multiplier = 100,
+                             c_seq_len = 100,
+                             starts = data.frame(alpha = 0.0014137,
+                                                delta = 0.001367))</code></pre>
+<pre class="r"><code>s3_m3_e %&gt;% report_results_2(., list_of_samples[[3]], report_eta = T)</code></pre>
+<p>C_hat: 40040</p>
+<p>56 times greater than observed richness</p>
+<p>Selected lambda: 230</p>
+<p>alpha = 0.0023145295083056, delta = 0.00136699998871969 <br><br><br><br></p>
 </div>
 </div>
 <div id="method-4" class="section level2">

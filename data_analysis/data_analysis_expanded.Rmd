@@ -475,15 +475,15 @@ s1_m3_c %>% report_results_2(., list_of_samples[[1]], report_eta = T)
 <br>
 
 ```{r s1_m3_d}
-#s1_m3_d <- rre::gof_criterion(list_of_samples[[1]], 
-#                              lambda_vec = seq(450,550,by=10),
-#                              multiplier = 200,
-#                              c_seq_len = 200,
-#                              starts = data.frame(alpha = 0.001738,
-#                                                  delta = 0.001744))
+s1_m3_d <- rre::gof_criterion(list_of_samples[[1]],
+                             lambda_vec = seq(500,650,by=10),
+                             multiplier = 200,
+                             c_seq_len = 200,
+                             starts = data.frame(alpha = 0.001738,
+                                                 delta = 0.001744))
 ```
 ```{r s1_m3_d_print, results = 'asis'}
-#s1_m3_d %>% report_results_2(., list_of_samples[[1]], report_eta = T)
+s1_m3_d %>% report_results_2(., list_of_samples[[1]], report_eta = T)
 ```
 <br><br>
 <br><br>
@@ -542,15 +542,15 @@ s2_m3_d %>% report_results_2(., list_of_samples[[2]], report_eta =T)
 
 ```{r s2_m3_e}
 # Selected lambda was on the edge of previous grid, lets try again:
-#s2_m3_e <- rre::gof_criterion(list_of_samples[[2]], 
-#                              lambda_vec = seq(150,300,by=5),
-#                              multiplier = 100,
-#                              c_seq_len = 499,
-#                              starts = data.frame(alpha = 0.004656,
-#                                                  delta = 0.0025668))
+s2_m3_e <- rre::gof_criterion(list_of_samples[[2]],
+                             lambda_vec = seq(150,300,by=10),
+                             multiplier = 100,
+                             c_seq_len = 100,
+                             starts = data.frame(alpha = 0.004656,
+                                                 delta = 0.0025668))
 ```
 ```{r s2_m3_e_print, results = 'asis'}
-#s2_m3_e %>% report_results_2(., list_of_samples[[2]], report_eta =T)
+s2_m3_e %>% report_results_2(., list_of_samples[[2]], report_eta =T)
 ```
 <br><br>
 <br><br>
@@ -610,15 +610,15 @@ s3_m3_d %>% report_results_2(., list_of_samples[[3]], report_eta = T)
 
 ```{r s3_m3_e}
 # Selected lambda was on the edge of previous grid, lets try again:
-#s3_m3_e <- rre::gof_criterion(list_of_samples[[3]], 
-#                              lambda_vec = seq(150, 250, by=5),
-#                              multiplier = 100,
-#                              c_seq_len = 499,
-#                              starts = data.frame(alpha = 0.0014137,
- #                                                 delta = 0.001367))
+s3_m3_e <- rre::gof_criterion(list_of_samples[[3]],
+                             lambda_vec = seq(150, 250, by=10),
+                             multiplier = 100,
+                             c_seq_len = 100,
+                             starts = data.frame(alpha = 0.0014137,
+                                                delta = 0.001367))
 ```
 ```{r s3_m3_e_print, results = 'asis'}
-#s3_m3_e %>% report_results_2(., list_of_samples[[3]], report_eta = T)
+s3_m3_e %>% report_results_2(., list_of_samples[[3]], report_eta = T)
 ```
 <br><br><br><br>
 
