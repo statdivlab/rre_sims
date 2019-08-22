@@ -364,6 +364,22 @@ s1_m2_b %>% report_results_2(., list_of_samples[[1]], report_eta = T)
 ```
 <br><br>
 
+```{r s1_m2_c}
+set.seed(4439)
+s1_m2_c <- rre::cv_replicates(list_of_samples[[1]],
+                              eval_function = "neg_unreg_like",
+                              partitions = 5,
+                              lambda_vec = seq(150,250,by=5),
+                              multiplier = 200,
+                              c_seq_len = 200,
+                              starts = data.frame(alpha = 0.001879,
+                                                  delta = 0.002208))
+```
+```{r s1_m2_c_print, results = 'asis'}
+s1_m2_c %>% report_results_2(., list_of_samples[[1]], report_eta = T)
+```
+<br><br>
+
 ### Sample 2
 
 ```{r s2_m2_a}
@@ -394,6 +410,23 @@ s2_m2_b <- rre::cv_replicates(list_of_samples[[2]],
 ```
 ```{r s2_m2_b_print, results = 'asis'}
 s2_m2_b %>% report_results_2(., list_of_samples[[2]], report_eta = T)
+```
+<br><br>
+
+```{r s2_m2_c}
+# narrow lambda, more starts:
+set.seed(12044)
+s2_m2_c <- rre::cv_replicates(list_of_samples[[2]],
+                              eval_function = "neg_unreg_like",
+                              partitions = 5,
+                              lambda_vec = seq(0,100,by=5),
+                              multiplier = 200,
+                              c_seq_len = 200,
+                              starts = data.frame(alpha = 0.002191,
+                                                  delta = 0.002789))
+```
+```{r s2_m2_c_print, results = 'asis'}
+s2_m2_c %>% report_results_2(., list_of_samples[[2]], report_eta = T)
 ```
 <br><br>
 
@@ -429,6 +462,26 @@ s3_m2_b <- rre::cv_replicates(list_of_samples[[3]],
 s3_m2_b %>% report_results_2(., list_of_samples[[3]], report_eta = T)
 ```
 <br><br>
+
+```{r s3_m2_c}
+# narrow lambda, more starts:
+set.seed(23444)
+s3_m2_c <- rre::cv_replicates(list_of_samples[[3]],
+                              eval_function = "neg_unreg_like",
+                              partitions = 5,
+                              lambda_vec = seq(0,100,by=5),
+                              multiplier = 200,
+                              c_seq_len = 200,
+                              starts = data.frame(alpha = 0.005138,
+                                                  delta = 0.002135))
+```
+```{r s3_m2_c_print, results = 'asis'}
+s3_m2_c %>% report_results_2(., list_of_samples[[3]], report_eta = T)
+```
+<br><br>
+
+_Note_ The 'c' round of method 2 took over a day to run for these 3 samples.
+
 <br><br>
 
 ## Method 3
@@ -660,6 +713,23 @@ s1_m4_b %>% report_results_2(., list_of_samples[[1]], report_eta = T)
 
 <br><br>
 
+```{r s1_m4_c}
+set.seed(2423)
+s1_m4_c <- rre::cv_replicates(list_of_samples[[2]],
+                              eval_function = "gof_chi_sq",
+                              partitions = 5,
+                              lambda_vec = seq(150,250,by=5),
+                              multiplier = 200,
+                              c_seq_len = 200,
+                              starts = data.frame(alpha = 0.005779,
+                                                  delta = 0.002530))
+```
+```{r s1_m4_c_print, results = 'asis'}
+s1_m4_c %>% report_results_2(., list_of_samples[[1]], report_eta = T)
+```
+
+<br><br>
+
 
 ### Sample 2
 
@@ -695,6 +765,23 @@ s2_m4_b%>% report_results_2(., list_of_samples[[2]], report_eta = T)
 
 <br><br>
 
+```{r s2_m4_c}
+set.seed(23451)
+s2_m4_c <- rre::cv_replicates(list_of_samples[[2]],
+                              eval_function = "gof_chi_sq",
+                              partitions = 5,
+                              lambda_vec = seq(0,100,by=5),
+                              multiplier = 200,
+                              c_seq_len = 200,
+                              starts = data.frame(alpha = 0.0016934,
+                                                  delta = 0.0027209))
+```
+```{r s2_m4_c_print, results = 'asis'}
+s2_m4_c%>% report_results_2(., list_of_samples[[2]], report_eta = T)
+```
+
+<br><br>
+
 ### Sample 3
 ```{r s3_m4_a}
 # big grids and few partitions to start:
@@ -725,6 +812,24 @@ s3_m4_b <- rre::cv_replicates(list_of_samples[[3]],
 ```
 ```{r s3_m4_b_print, results = 'asis'}
 s3_m4_b %>% report_results_2(., list_of_samples[[3]], report_eta = T)
+```
+
+<br><br>
+
+```{r s3_m4_c}
+# big grids and few partitions to start:
+set.seed(7654)
+s3_m4_c <- rre::cv_replicates(list_of_samples[[3]],
+                              eval_function = "gof_chi_sq",
+                              partitions = 5,
+                              lambda_vec = seq(0,120,by=5),
+                              multiplier = 200,
+                              c_seq_len = 200,
+                              starts = data.frame(alpha = 0.002450,
+                                                  delta = 0.001773))
+```
+```{r s3_m4_c_print, results = 'asis'}
+s3_m4_c %>% report_results_2(., list_of_samples[[3]], report_eta = T)
 ```
 
 <br><br>
