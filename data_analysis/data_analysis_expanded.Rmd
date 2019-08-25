@@ -714,18 +714,18 @@ s1_m4_b %>% report_results_2(., list_of_samples[[1]], report_eta = T)
 <br><br>
 
 ```{r s1_m4_c}
-set.seed(2423)
-s1_m4_c <- rre::cv_replicates(list_of_samples[[2]],
-                              eval_function = "gof_chi_sq",
-                              partitions = 5,
-                              lambda_vec = seq(50,150,by=5),
-                              multiplier = 200,
-                              c_seq_len = 200,
-                              starts = data.frame(alpha = 0.005779,
-                                                  delta = 0.002530))
+#set.seed(2423)
+#s1_m4_c <- rre::cv_replicates(list_of_samples[[2]],
+#                              eval_function = "gof_chi_sq",
+#                              partitions = 5,
+#                              lambda_vec = seq(50,150,by=5),
+#                              multiplier = 200,
+#                              c_seq_len = 200,
+#                              starts = data.frame(alpha = 0.005779,
+#                                                  delta = 0.002530))
 ```
 ```{r s1_m4_c_print, results = 'asis'}
-s1_m4_c %>% report_results_2(., list_of_samples[[1]], report_eta = T)
+#s1_m4_c %>% report_results_2(., list_of_samples[[1]], report_eta = T)
 ```
 
 <br><br>
@@ -842,19 +842,19 @@ For each method and sample we save the most refined or best estimate.
 sample_1 <- list(method_0 = s1_m0_b$best,
                  method_1 = s1_m1_d$best,
                  method_2 = s1_m2_c$best,
-                 method_3 = s1_m3_c$best,
-                 method_4 = s1_m4_c$best)
+                 method_3 = s1_m3_d$best,
+                 method_4 = s1_m4_b$best)
 
 sample_2 <- list(method_0 = s2_m0_b$best,
                  method_1 = s2_m1_c$best,
                  method_2 = s2_m2_c$best,
-                 method_3 = s2_m3_d$best,
+                 method_3 = s2_m3_e$best,
                  method_4 = s2_m4_c$best)
 
 sample_3 <- list(method_0 = s3_m0_b$best,
                  method_1 = s3_m1_d$best,
                  method_2 = s3_m2_c$best,
-                 method_3 = s3_m3_d$best,
+                 method_3 = s3_m3_e$best,
                  method_4 = s3_m4_c$best)
 
 sample_outputs <- list(sample_1 = sample_1, 

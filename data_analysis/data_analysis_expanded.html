@@ -784,20 +784,16 @@ s1_m4_b &lt;- rre::cv_replicates(list_of_samples[[2]],
 <p>Selected lambda: 100</p>
 <p>alpha = 0.00577937580902826, delta = 0.00253025950819303</p>
 <p><br><br></p>
-<pre class="r"><code>set.seed(2423)
-s1_m4_c &lt;- rre::cv_replicates(list_of_samples[[2]],
-                              eval_function = &quot;gof_chi_sq&quot;,
-                              partitions = 5,
-                              lambda_vec = seq(150,250,by=5),
-                              multiplier = 200,
-                              c_seq_len = 200,
-                              starts = data.frame(alpha = 0.005779,
-                                                  delta = 0.002530))</code></pre>
-<pre class="r"><code>s1_m4_c %&gt;% report_results_2(., list_of_samples[[1]], report_eta = T)</code></pre>
-<p>C_hat: 8183</p>
-<p>14.61 times greater than observed richness</p>
-<p>Selected lambda: 150</p>
-<p>alpha = 0.0409261381151377, delta = 0.00286744610240304</p>
+<pre class="r"><code>#set.seed(2423)
+#s1_m4_c &lt;- rre::cv_replicates(list_of_samples[[2]],
+#                              eval_function = &quot;gof_chi_sq&quot;,
+#                              partitions = 5,
+#                              lambda_vec = seq(50,150,by=5),
+#                              multiplier = 200,
+#                              c_seq_len = 200,
+#                              starts = data.frame(alpha = 0.005779,
+#                                                  delta = 0.002530))</code></pre>
+<pre class="r"><code>#s1_m4_c %&gt;% report_results_2(., list_of_samples[[1]], report_eta = T)</code></pre>
 <p><br><br></p>
 </div>
 <div id="sample-2-4" class="section level3">
@@ -899,19 +895,19 @@ s3_m4_c &lt;- rre::cv_replicates(list_of_samples[[3]],
 <pre class="r"><code>sample_1 &lt;- list(method_0 = s1_m0_b$best,
                  method_1 = s1_m1_d$best,
                  method_2 = s1_m2_c$best,
-                 method_3 = s1_m3_c$best,
-                 method_4 = s1_m4_c$best)
+                 method_3 = s1_m3_d$best,
+                 method_4 = s1_m4_b$best)
 
 sample_2 &lt;- list(method_0 = s2_m0_b$best,
                  method_1 = s2_m1_c$best,
                  method_2 = s2_m2_c$best,
-                 method_3 = s2_m3_d$best,
+                 method_3 = s2_m3_e$best,
                  method_4 = s2_m4_c$best)
 
 sample_3 &lt;- list(method_0 = s3_m0_b$best,
                  method_1 = s3_m1_d$best,
                  method_2 = s3_m2_c$best,
-                 method_3 = s3_m3_d$best,
+                 method_3 = s3_m3_e$best,
                  method_4 = s3_m4_c$best)
 
 sample_outputs &lt;- list(sample_1 = sample_1, 
