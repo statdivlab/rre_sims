@@ -539,6 +539,21 @@ s1_m3_d <- rre::gof_criterion(list_of_samples[[1]],
 s1_m3_d %>% report_results_2(., list_of_samples[[1]], report_eta = T)
 ```
 <br><br>
+
+
+
+```{r s1_m3_e}
+s1_m3_e <- rre::gof_criterion(list_of_samples[[1]],
+                             lambda_vec = seq(520,580,by=5),
+                             multiplier = 200,
+                             c_seq_len = 200,
+                             starts = data.frame(alpha = 0.001738,
+                                                 delta = 0.001744))
+```
+```{r s1_m3_e_print, results = 'asis'}
+s1_m3_e %>% report_results_2(., list_of_samples[[1]], report_eta = T)
+```
+<br><br>
 <br><br>
 
 ### Sample 2
@@ -606,6 +621,20 @@ s2_m3_e <- rre::gof_criterion(list_of_samples[[2]],
 s2_m3_e %>% report_results_2(., list_of_samples[[2]], report_eta =T)
 ```
 <br><br>
+
+```{r s2_m3_f}
+# Selected lambda was on the edge of previous grid, lets try again:
+s2_m3_f <- rre::gof_criterion(list_of_samples[[2]],
+                             lambda_vec = seq(170,270,by=5),
+                             multiplier = 100,
+                             c_seq_len = 100,
+                             starts = data.frame(alpha = 0.004656,
+                                                 delta = 0.0025668))
+```
+```{r s2_m3_f_print, results = 'asis'}
+s2_m3_f %>% report_results_2(., list_of_samples[[2]], report_eta =T)
+```
+<br><br>
 <br><br>
 
 ### Sample 3
@@ -662,7 +691,6 @@ s3_m3_d %>% report_results_2(., list_of_samples[[3]], report_eta = T)
 
 
 ```{r s3_m3_e}
-# Selected lambda was on the edge of previous grid, lets try again:
 s3_m3_e <- rre::gof_criterion(list_of_samples[[3]],
                              lambda_vec = seq(150, 250, by=10),
                              multiplier = 100,
@@ -673,7 +701,23 @@ s3_m3_e <- rre::gof_criterion(list_of_samples[[3]],
 ```{r s3_m3_e_print, results = 'asis'}
 s3_m3_e %>% report_results_2(., list_of_samples[[3]], report_eta = T)
 ```
-<br><br><br><br>
+<br><br>
+
+```{r s3_m3_f}
+# Dense lambda grid:
+s3_m3_f <- rre::gof_criterion(list_of_samples[[3]],
+                             lambda_vec = seq(180, 280, by=5),
+                             multiplier = 100,
+                             c_seq_len = 100,
+                             starts = data.frame(alpha = 0.0014137,
+                                                delta = 0.001367))
+```
+```{r s3_m3_f_print, results = 'asis'}
+s3_m3_f %>% report_results_2(., list_of_samples[[3]], report_eta = T)
+```
+<br><br>
+
+<br><br>
 
 
 ## Method 4
@@ -714,18 +758,18 @@ s1_m4_b %>% report_results_2(., list_of_samples[[1]], report_eta = T)
 <br><br>
 
 ```{r s1_m4_c}
-#set.seed(2423)
-#s1_m4_c <- rre::cv_replicates(list_of_samples[[2]],
-#                              eval_function = "gof_chi_sq",
-#                              partitions = 5,
-#                              lambda_vec = seq(50,150,by=5),
-#                              multiplier = 200,
-#                              c_seq_len = 200,
-#                              starts = data.frame(alpha = 0.005779,
-#                                                  delta = 0.002530))
+set.seed(2423)
+s1_m4_c <- rre::cv_replicates(list_of_samples[[2]],
+                              eval_function = "gof_chi_sq",
+                              partitions = 5,
+                              lambda_vec = seq(50,150,by=5),
+                              multiplier = 200,
+                              c_seq_len = 200,
+                              starts = data.frame(alpha = 0.005779,
+                                                  delta = 0.002530))
 ```
 ```{r s1_m4_c_print, results = 'asis'}
-#s1_m4_c %>% report_results_2(., list_of_samples[[1]], report_eta = T)
+s1_m4_c %>% report_results_2(., list_of_samples[[1]], report_eta = T)
 ```
 
 <br><br>
