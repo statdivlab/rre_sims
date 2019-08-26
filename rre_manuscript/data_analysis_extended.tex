@@ -1,0 +1,156 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{natbib, bbm}
+\usepackage{url} % not crucial - just used below for the URL
+
+\usepackage{amsthm}
+\usepackage{lipsum}
+
+\usepackage{xparse}
+\usepackage{mathtools}
+\usepackage[table,dvipsnames]{xcolor}
+
+\usepackage{ifthen}
+\usepackage{pstricks}
+\usepackage[normalem]{ulem}
+
+\usepackage{booktabs}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\newcommand{\kmax}{k_{\text{max}}}
+\newcommand{\lambdagrid}{\lambda^{\text{grid}}}
+
+\usepackage{multirow}
+
+\newtheoremstyle{break}
+  {\topsep}{\topsep}%
+  {\itshape}{}%
+  {\bfseries}{}%
+  {\newline}{}%
+\theoremstyle{break}
+\newtheorem{theorem}{Theorem}
+
+\newtheoremstyle{break}
+  {\topsep}{\topsep}%
+  {\itshape}{}%
+  {\bfseries}{}%
+  {\newline}{}%
+\theoremstyle{break}
+\newtheorem{prop}{Proposition}
+
+\newboolean{DEBUG}
+\setboolean{DEBUG}{true}
+\newrgbcolor{amycolor}{.7 .1 .1}
+\ifthenelse {\boolean{DEBUG}}
+{\newcommand{\amy}[1]{{\bf \amycolor{[\@Amy: #1]}}}}
+{\newcommand{\amy}[1]{}}
+
+
+\RequirePackage[OT1]{fontenc}
+\RequirePackage{amsthm,amsmath, bbm, xspace, graphics, graphicx}
+%\RequirePackage{breqn}
+%\RequirePackage[colorlinks,citecolor=blue,urlcolor=blue]{hyperref}
+
+\pdfminorversion=4
+% NOTE: To produce blinded version, replace "0" with "1" below.
+\newcommand{\blind}{1}
+
+% DON'T change margins - should be 1 inch all around.
+\addtolength{\oddsidemargin}{-.5in}%
+\addtolength{\evensidemargin}{-.5in}%
+\addtolength{\textwidth}{1in}%
+\addtolength{\textheight}{-.3in}%
+\addtolength{\topmargin}{-.8in}%
+
+
+\begin{document}
+
+%\bibliographystyle{natbib}
+
+\def\spacingset#1{\renewcommand{\baselinestretch}%
+{#1}\small\normalsize} \spacingset{1}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Data Analysis}
+\label{sec:data_analysis}
+
+\subsection{Estimating microbial richness in Lake Champlain}
+
+To illustrate the performance of our methods on ecological data, we estimate strain-level microbial diversity in Lake Champlain, a large eutrophic lake in Canada.  We analyze data from \citet{tromas_2017}, considering samples from the littoral zone in the summer season of the same year as replicates. This gives us 8 replicates from 2009, 6 replicates from 2010 and 6 replicates from 2011.  
+
+
+The richness estimates from each method are displayed in Figure \ref{fig:data_analysis} and Table \ref{tab:data_analysis}.  These estimates are high as 160 times the observed richness, suggesting that the negative binomial model may be a poor fit to this data set.  As a result, applying our methods to real data required some manual tuning of $\lambdagrid$ and the search grid for $C$.
+
+Despite the estimates being significantly more inflated than in our simulations, many of the trends observed in simulations hold true here.  Method 0 produces the highest $\widehat{C}$ for 2009 and 2010 and it was second highest to Method 2 in 2011.  Method 1 consistently estimated $\widehat{C}$ to be at or near the observed richness $c$.  These are exactly the tendencies these methods showed when we generate simulations from a correctly specified model (see Figure \ref{fig:tuning_sim_1}).
+
+We model species richness because the observed richness is an underestimate of the truth.  The original motivation for penalization is that the unpenalized MLE estimate can be much larger than the truth.  In data analysis we don't know the truth, but we would expect an ideal method to be situated between these two extremes.  Only the methods making use of a goodness of fit metric (3 and 4) are between Method 0 and the observed richness in all samples.  As a result we conclude Methods 3 and 4 show the greatest promise on real data containing replicates.
+
+\noindent\large{\textbf{Note from Alex:  I've given two versions of the table, the first is much bigger and probably more suited to being a supplement.  The second is more compact and could be crammed into a corner of the paper if needed.  Happy to make revisions to tables and figures if that's helpful. }}
+
+\begin{table}[ht]
+\caption{Diversity estimates from the Lake Champlain data analysis from 2009 ($r = 8$), 2010 ($r = 6$) and 2011 ($r = 6$) from our proposed methods. 
+\label{tab:data_analysis}}
+\centering
+\begin{tabular}{llcccc}
+  \toprule
+Year & Method & $\widehat{C}$ & $\widetilde{\lambda}$ & $\widehat{\alpha}$ & $\widehat{\delta}$ \\ 
+  \midrule
+2009 & {[0]} Unpenalized MLE & 73,404 & \textemdash & 0.00088 & 0.00180 \\ 
+  \multirow{5}{*} & {[1]} Minimum Variance & 593 & 700 & 0.27720 & 0.00342 \\ 
+  \multirow{5}{*} & {[2]} CV Likelihood & 25,930 & 220 & 0.00516 & 0.00142 \\ 
+  \multirow{5}{*} & {[3]} Goodness of fit & 20,160 & 550 & 0.00323 & 0.00174 \\ 
+  \multirow{5}{*} & {[4]} CV G.O.F. & 39,997 & 100 & 0.00578 & 0.00253 \\ 
+  2010 & {[0]} Unpenalized MLE & 47,631 & \textemdash & 0.00185 & 0.00253 \\ 
+  \multirow{5}{*} & {[1]} Minimum Variance & 572 & 500 & 0.62668 & 0.00724 \\ 
+  \multirow{5}{*} & {[2]} CV Likelihood & 24,799 & 0 & 0.00379 & 0.00270 \\ 
+  \multirow{5}{*} & {[3]} Goodness of fit & 13,156 & 220 & 0.00685 & 0.00258 \\ 
+  \multirow{5}{*} & {[4]} CV G.O.F. & 47,098 & 0 & 0.00208 & 0.00277 \\ 
+  2011 & {[0]} Unpenalized MLE & 57,686 & \textemdash & 0.00161 & 0.00140 \\ 
+  \multirow{5}{*} & {[1]} Minimum Variance & 718 & 500 & 0.40112 & 0.00355 \\ 
+  \multirow{5}{*} & {[2]} CV Likelihood & 118,547 & 0 & 0.00122 & 0.00193 \\ 
+  \multirow{5}{*} & {[3]} Goodness of fit & 40,040 & 230 & 0.00231 & 0.00137 \\ 
+  \multirow{5}{*} & {[4]} CV G.O.F. & 36,395 & 5 & 0.00358 & 0.00178 \\ 
+   \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\caption{Diversity estimates from the Lake Champlain data analysis from 2009 ($r = 8$), 2010 ($r = 6$) and 2011 ($r = 6$) from our proposed methods. 
+\label{tab:data_analysis_compact}}
+\centering
+\tiny
+\begin{tabular}{lllllllllllll}
+  \toprule
+      & \multicolumn{4}{c}{2009} & \multicolumn{4}{c}{2010} & \multicolumn{4}{c}{2011} \\ \cmidrule(lr){2-5}\cmidrule(lr){6-9}\cmidrule(lr){10-13}
+Method & $\widehat{C}$ & $\widetilde{\lambda}$ & $\widehat{\alpha}$ & $\widehat{\delta}$ & $\widehat{C}$ & $\widetilde{\lambda}$ & $\widehat{\alpha}$ & $\widehat{\delta}$ & $\widehat{C}$ & $\widetilde{\lambda}$ & $\widehat{\alpha}$ & $\widehat{\delta}$ \\ 
+  \midrule
+{[0]} Unpenalized MLE & 73,404 & \textemdash & 0.00088 & 0.00180 & 47,631 & \textemdash & 0.00185 & 0.00253 & 57,686 & \textemdash & 0.00161 & 0.00140 \\ 
+  {[1]} Minimum Variance & 593 & 700 & 0.27720 & 0.00342 & 572 & 500 & 0.62668 & 0.00724 & 718 & 500 & 0.40112 & 0.00355 \\ 
+  {[2]} CV Likelihood & 25,930 & 220 & 0.00516 & 0.00142 & 24,799 & 0 & 0.00379 & 0.00270 & 118,547 & 0 & 0.00122 & 0.00193 \\ 
+  {[3]} Goodness of fit & 20,160 & 550 & 0.00323 & 0.00174 & 13,156 & 220 & 0.00685 & 0.00258 & 40,040 & 230 & 0.00231 & 0.00137 \\ 
+  {[4]} CV G.O.F. & 39,997 & 100 & 0.00578 & 0.00253 & 47,098 & 0 & 0.00208 & 0.00277 & 36,395 & 5 & 0.00358 & 0.00178 \\ 
+   \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\caption{Estimates of strain-level microbial diversity in Lake Champlain in the summers of 2009 ($r = 8$), 2010 ($r = 6$) and 2011 ($r = 6$) based on our proposed methods.
+%$\widehat{C}_{[\text{method}]}$ is the $C$ estimate obtained using the methods defined in Section \ref{sec:tuning_proposals}, shown for each sample.  The number of replicates in each sample is given by $r$.
+%
+% A visual display of the results from Table \ref{tab:data_analysis}, $\widehat{C}$ estimates from each method.
+\label{fig:data_analysis}}
+\centering\makebox[\textwidth]{\includegraphics[width=\textwidth]{./images/data_analysis_expanded.pdf}}
+\end{figure}
+
+
+\bibliographystyle{biorefs}
+\bibliography{refs,amys-papers-library}
+
+
+\end{document}
