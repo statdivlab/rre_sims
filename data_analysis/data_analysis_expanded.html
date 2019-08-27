@@ -358,19 +358,26 @@ s1_m1_c &lt;- rre::minimum_subset_distance(list_of_samples[[1]],
 <p>1.04 times greater than observed richness</p>
 <p>Selected lambda: 700</p>
 <p>alpha = 0.288630187057372, delta = 0.00326079733294703 <br><br></p>
-<pre class="r"><code>set.seed(2339)
-s1_m1_d &lt;- rre::minimum_subset_distance(list_of_samples[[1]],
-                                        partitions = 10,
-                                        lambda_vec = 700:740,
-                                        multiplier = 2,
-                                        c_seq_len = 11,
-                                        starts = data.frame(alpha = 0.28863,
-                                                            delta = 0.0032607))</code></pre>
-<pre class="r"><code>s1_m1_d %&gt;% report_results_2(.,  list_of_samples[[1]], report_eta = T)</code></pre>
-<p>C_hat: 593</p>
-<p>1.06 times greater than observed richness</p>
-<p>Selected lambda: 700</p>
-<p>alpha = 0.27719641954539, delta = 0.00341774256806582 <br><br></p>
+<!--
+
+```r
+# This seemed like a good idea until realizing how long it would take to do all the methods to this level of precision:
+
+#set.seed(2339)
+#s1_m1_d <- rre::minimum_subset_distance(list_of_samples[[1]],
+#                                        partitions = 10,
+#                                        lambda_vec = 700:740,
+#                                        multiplier = 2,
+#                                        c_seq_len = 11,
+#                                        starts = data.frame(alpha = 0.28863,
+#                                                            delta = 0.0032607))
+```
+
+```r
+#s1_m1_d %>% report_results_2(.,  list_of_samples[[1]], report_eta = T)
+```
+<br><br>
+-->
 <p><br><br></p>
 </div>
 <div id="sample-2-1" class="section level3">
@@ -454,10 +461,11 @@ s3_m1_c &lt;- rre::minimum_subset_distance(list_of_samples[[3]],
 <p>1 times greater than observed richness</p>
 <p>Selected lambda: 600</p>
 <p>alpha = 0.514296454113112, delta = 0.00399721108167562 <br><br></p>
-<pre class="r"><code>set.seed(452348)
+<pre class="r"><code># Previous result on the edge of lambdagrid
+set.seed(452348)
 s3_m1_d &lt;- rre::minimum_subset_distance(list_of_samples[[3]],
                                         partitions = 10,
-                                        lambda_vec = seq(500, 600 ,by=5),
+                                        lambda_vec = seq(450, 550 ,by=5),
                                         multiplier = 2,
                                         c_seq_len = 11,
                                         starts = data.frame(alpha = 0.5143,
@@ -932,7 +940,7 @@ s3_m4_c &lt;- rre::cv_replicates(list_of_samples[[3]],
 <h2>Output data</h2>
 <p>For each method and sample we save the most refined or best estimate.</p>
 <pre class="r"><code>sample_1 &lt;- list(method_0 = s1_m0_b$best,
-                 method_1 = s1_m1_d$best,
+                 method_1 = s1_m1_c$best,
                  method_2 = s1_m2_c$best,
                  method_3 = s1_m3_d$best,
                  method_4 = s1_m4_b$best)

@@ -197,21 +197,24 @@ s1_m1_c %>% report_results_2(.,  list_of_samples[[1]], report_eta = T)
 ```
 <br><br>
 
+<!--
 ```{r s1_m1_d}
+# This seemed like a good idea until realizing how long it would take to do all the methods to this level of precision:
 
-set.seed(2339)
-s1_m1_d <- rre::minimum_subset_distance(list_of_samples[[1]],
-                                        partitions = 10,
-                                        lambda_vec = 700:740,
-                                        multiplier = 2,
-                                        c_seq_len = 11,
-                                        starts = data.frame(alpha = 0.28863,
-                                                            delta = 0.0032607))
+#set.seed(2339)
+#s1_m1_d <- rre::minimum_subset_distance(list_of_samples[[1]],
+#                                        partitions = 10,
+#                                        lambda_vec = 700:740,
+#                                        multiplier = 2,
+#                                        c_seq_len = 11,
+#                                        starts = data.frame(alpha = 0.28863,
+#                                                            delta = 0.0032607))
 ```
 ```{r s1_m1_d_print, results = 'asis'}
-s1_m1_d %>% report_results_2(.,  list_of_samples[[1]], report_eta = T)
+#s1_m1_d %>% report_results_2(.,  list_of_samples[[1]], report_eta = T)
 ```
 <br><br>
+-->
 
 
 <br><br>
@@ -312,10 +315,11 @@ s3_m1_c %>% report_results_2(., list_of_samples[[3]], report_eta = T)
 <br><br>
 
 ```{r s3_m1_d}
+# Previous result on the edge of lambdagrid
 set.seed(452348)
 s3_m1_d <- rre::minimum_subset_distance(list_of_samples[[3]],
                                         partitions = 10,
-                                        lambda_vec = seq(500, 600 ,by=5),
+                                        lambda_vec = seq(450, 550 ,by=5),
                                         multiplier = 2,
                                         c_seq_len = 11,
                                         starts = data.frame(alpha = 0.5143,
@@ -884,7 +888,7 @@ s3_m4_c %>% report_results_2(., list_of_samples[[3]], report_eta = T)
 For each method and sample we save the most refined or best estimate.
 ```{r output_data}
 sample_1 <- list(method_0 = s1_m0_b$best,
-                 method_1 = s1_m1_d$best,
+                 method_1 = s1_m1_c$best,
                  method_2 = s1_m2_c$best,
                  method_3 = s1_m3_d$best,
                  method_4 = s1_m4_b$best)
