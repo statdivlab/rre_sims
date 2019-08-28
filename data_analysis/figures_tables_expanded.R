@@ -103,6 +103,7 @@ table_to_console_1 <- function(outs) {
 
 # condensed table output:
 table_to_console_2 <- function(outs) {
+  # Function starts the same as table_to_console_1:
   outs %<>% all_samples  
   outs %<>% dplyr::mutate(method = dplyr::case_when(
     method == 0 ~ "{[0]} Unpenalized MLE", # method 00
@@ -121,15 +122,21 @@ table_to_console_2 <- function(outs) {
                                                    as.character(selected_lambda)),
                           alpha = formatC(alpha, format = "f", digits = 5),
                           delta = formatC(delta, format = "f", digits = 5))
-  # This is rearrangement for latex output:
-  cols_1 <- outs[1:5,2:6]
-  cols_2 <- outs[6:10,3:6]
-  cols_3 <- outs[11:15,3:6]
-  flat_table <- cbind(cols_1,cols_2,cols_3)
+  # Output formatting from here is new: 
+  cols_1 <- outs[1:5,1:6]
+  cols_2 <- outs[6:10,1:6]
+  cols_3 <- outs[11:15,1:6]
   
-  ft_names <- c("$\\widehat{C}$", "$\\widetilde{\\lambda}$",
+ 
+  flat_table <- rbind(cols_1,cols_2,cols_3)
+  
+  year_vec <- c("2009", "2010", "2011", "\\multirow{5}{*}")
+  
+  flat_table[,1] <- year_vec[c(1,rep(4,4),2,rep(4,4),3,rep(4,4))]
+  
+  ft_names <- c("Year", "Method", "$\\widehat{C}$", "$\\widetilde{\\lambda}$",
                 "$\\widehat{\\alpha}$", "$\\widehat{\\delta}$")
-  colnames(flat_table) <- c("Method", rep(ft_names, times = 3))
+  colnames(flat_table) <- ft_names
   flat_table %>% xtable::xtable(.) %>% print(., 
                                              sanitize.text.function = identity,
                                              sanitize.rownames.function = identity,
