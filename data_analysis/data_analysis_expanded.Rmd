@@ -1,9 +1,15 @@
 ---
-title: "Data Analysis Expanded"
+title: "Data Analysis"
 author: "Alex Paynter"
 date: "August 9, 2019"
 output: html_document
 ---
+
+# Introduction
+
+This document shows the code used to analyze the Lake Champlain data originally published by _Tromas et. al. (2017)_.  Our methods utilize a grid search for $\lambda$ and $C$, and some manual tuning of these grids was needed to analyze these data.  We started with large, sparse grids and narrowed them down iteratively.  The manual tuning is shown for each method and sample in chronological order, and we denote the order using letter suffixes.  For example, `s1_m0_a` indicates the first run of sample 1 using method 0.  Then `s1_m0_b` is the second run, using the `s1_m0_a` result to inform our grid choices.
+
+Our likelihood search was selected to be exhaustive rather than fast, so be warned that running all  code in this document will take days on a typical personal computer.
 
 # Setup
 
@@ -484,8 +490,6 @@ s3_m2_c %>% report_results_2(., list_of_samples[[3]], report_eta = T)
 ```
 <br><br>
 
-_Note_ The 'c' round of method 2 took over a day to run for these 3 samples.
-
 <br><br>
 
 ## Method 3
@@ -890,19 +894,19 @@ For each method and sample we save the most refined or best estimate.
 sample_1 <- list(method_0 = s1_m0_b$best,
                  method_1 = s1_m1_c$best,
                  method_2 = s1_m2_c$best,
-                 method_3 = s1_m3_d$best,
-                 method_4 = s1_m4_b$best)
+                 method_3 = s1_m3_e$best,
+                 method_4 = s1_m4_c$best)
 
 sample_2 <- list(method_0 = s2_m0_b$best,
                  method_1 = s2_m1_c$best,
                  method_2 = s2_m2_c$best,
-                 method_3 = s2_m3_e$best,
+                 method_3 = s2_m3_f$best,
                  method_4 = s2_m4_c$best)
 
 sample_3 <- list(method_0 = s3_m0_b$best,
                  method_1 = s3_m1_d$best,
                  method_2 = s3_m2_c$best,
-                 method_3 = s3_m3_e$best,
+                 method_3 = s3_m3_f$best,
                  method_4 = s3_m4_c$best)
 
 sample_outputs <- list(sample_1 = sample_1, 
