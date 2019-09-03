@@ -1,4 +1,5 @@
 library(tidyverse)
+library(breakaway)
 pasolli_et_al <- openxlsx::read.xlsx("https://ars.els-cdn.com/content/image/1-s2.0-S0092867419300017-mmc4.xlsx", sheet = 2)
 ft <- pasolli_et_al$`#.Samples` %>% make_frequency_count_table
 ft %>% head
@@ -161,7 +162,7 @@ m3_n <- rre::gof_criterion(list(ft),
                            c_seq_len = 100,
                            multiplier = 60,
                            lambda_vec = 900:910)
-m3_n
+m3_n # lambda = 905
 163587/3930 # 41, ok
 
 m3_n$best
