@@ -1,3 +1,6 @@
+*.Rproj
+*.RData
+*.RHistory
 rre_manuscript/paper.pdf
 
 *.DS_Store

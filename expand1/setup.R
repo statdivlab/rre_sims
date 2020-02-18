@@ -1,6 +1,0 @@
-# install.packages("devtools")
-# devtools::install_github("statdivlab/rre")
-# install.packages("tidyverse")
-# install.packages("stringr")
-# install.packages("magrittr")
-# devtools::install_github("jacobbien/simulator")

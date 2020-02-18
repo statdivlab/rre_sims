@@ -3,6 +3,8 @@ library(breakaway)
 pasolli_et_al <- openxlsx::read.xlsx("https://ars.els-cdn.com/content/image/1-s2.0-S0092867419300017-mmc4.xlsx", sheet = 2)
 ft <- pasolli_et_al$`#.Samples` %>% make_frequency_count_table
 ft %>% head
+ft %>% breakaway %>% summary
+
 m0 <- rre::unregularized_mle(list(ft))
 # m1 <- rre::minimum_subset_distance(list(ft))
 m3 <- rre::gof_criterion(list(ft))
