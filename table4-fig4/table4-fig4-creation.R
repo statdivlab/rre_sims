@@ -2,11 +2,13 @@ library(tidyverse)
 
 ## the analysis of data with the bigger lambda grid
 
-all_results <- list.files("sdl-rre/output", full.names=T) %>%
-  str_subset("biglambda") %>%
-  sapply(read_csv, simplify=F) %>%
-  do.call(bind_rows, .)
+# all_results <- list.files("sdl-rre/output", full.names=T) %>%
+#   str_subset("biglambda") %>%
+#   sapply(read_csv, simplify=F) %>%
+#   do.call(bind_rows, .)
+# write_csv(x=all_results, path="table4-fig4/table4-fig4-raw-data.csv")
 
+all_results <- read_csv("table4-fig4/table4-fig4-raw-data.csv")
 cleaned_results <- all_results %>%
   filter(ccc.x == ccc.y, alpha.x == alpha.y, delta.x == delta.y, replicates == r) %>%
   select(-ccc.y, -alpha.y, -delta.y, -name, -label, 
@@ -38,13 +40,13 @@ main_summary <- cleaned_results %>%
   select(Method, ccc, alpha, delta, `6`, `10`, `14`:`50`)
 main_summary %>% print(n=Inf)
 main_summary %>%
-  # filter(!(alpha == 0.01 & delta == 1e-5)) %>%
+  filter(!(alpha == 0.01 & delta == 1e-5)) %>%
   kableExtra::kable(format="latex", digits=c(rep(Inf, 4), rep(0, 5)), 
                     col.names=c("Method", "$C$", "$\\alpha$", 
                                 "$\\delta$", "6", "10", "14", "30", "50"), 
                     escape = FALSE)
 
-## some plots 
+## Fig 4 
 cleaned_results %>%
   ungroup %>%   
   filter(Method %in% c("Method 0", "Method 3")) %>%
@@ -74,7 +76,7 @@ cleaned_results %>%
         legend.position="bottom")
 # ggsave("/Users/adwillis/software/rre_sims/rre_manuscript/jas-submitted-v2/images/method_sim_2.pdf")
 
-
+# percentage numbers
 cleaned_results %>%
   summarise(RMSE = sqrt(mean((ccc_hat - ccc)^2)), 
             n = n()) %>%

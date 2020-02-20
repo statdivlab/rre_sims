@@ -1,11 +1,13 @@
 library(tidyverse)
 
-all_results <- list.files("../sdl-rre/output", full.names=T) %>%
-  str_subset("logarithmic_r_") %>%
-  sapply(read_csv, simplify=F) %>%
-  do.call(bind_rows, .)
+# all_results <- list.files("../sdl-rre/output", full.names=T) %>%
+#   str_subset("logarithmic_r_") %>%
+#   sapply(read_csv, simplify=F) %>%
+#   do.call(bind_rows, .)
+# write_csv(x=all_results, path="logarithmic-sims-raw-data.csv")
+all_results <- read_csv("logarithmic-sims-raw-data.csv")
 
-all_results
+
 cleaned_results <- all_results %>%
   select(-name, -label, 
          -Draw, -time) %>%
